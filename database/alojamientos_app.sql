@@ -69,7 +69,7 @@ INSERT INTO `anfitriones` (`id`,`id_usuario`,`biografia`) VALUES
 
 CREATE TABLE `empleados` (
   `id` INT(10) PRIMARY KEY AUTO_INCREMENT,					-- Campo ID empleado
-  `id_usuario` INT(10) NOT NULL UNIQUE, 					-- Campo ID usuario para FK
+  `id_usuario` INT(10) NOT NULL, 					-- Campo ID usuario para FK
   `fecha_nacimiento`DATE NULL,              				-- Fecha de nacimiento
   `fecha_contratacion` DATE NOT NULL,						-- Fecha de ingreso a la empresa
   `direccion` VARCHAR(255) NULL,							-- Direccion de residencia del empleado
