@@ -1,0 +1,76 @@
+/*CONTAINER PRINCIPAL*/
+.central-container {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url('../../public/img/main-img.avif');
+    max-width: 100%;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.8);
+    position: relative;
+    top: 65PX;
+}
+
+/*TITULO Y SUBTITULO*/
+.title-text {
+    font-size: 5em;
+    font-weight: bold;
+    line-height: 0.9em;
+}
+
+.subtitle-text {
+    font-size: 1.2em;
+}
+
+.line-separator {
+    background-color: #e29954;
+    height: 5px;
+}
+
+/* FORM BUSCAR */
+.form-buscar input {
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Cards de alojamiento de DB */
+.img-alojamiento {
+    height: 235px !important;
+}
+
+.heart-btn {
+
+    transition: 0.3s ease;
+    cursor: pointer;
+    color: #e9dbdb !important;
+}
+
+.heart-btn .fa-heart:hover {
+    transform: scale(1.1);
+    transition: 0.3s ease;
+}
+
+
+@media(max-width: 950px) {
+
+    /*TITULO Y SUBTITULO*/
+    .title-text {
+        font-size: 3.5em;
+    }
+
+    .subtitle-text {
+        font-size: 1.1em;
+    }
+}
+
+@media(max-width: 440px) {
+
+    /*TITULO Y SUBTITULO*/
+    .title-text {
+        font-size: 2.8em;
+    }
+
+    .subtitle-text {
+        font-size: 1em;
+    }
+}

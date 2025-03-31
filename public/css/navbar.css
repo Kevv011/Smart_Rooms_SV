@@ -1,0 +1,46 @@
+/*MAIN-NAVBAR*/
+.navbars {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+}
+
+.main-navbar ul li {
+    transition: 0.3s ease;
+    color: #000;
+}
+
+.main-navbar ul li:hover {
+    background-color: rgba(227, 228, 223, 0.562) !important;
+    transition: 0.3s ease;
+    border-radius: 20px;
+}
+
+.dropstart .dropdown-toggle::before {
+    display: none !important;
+}
+
+/*SEC-NAVBAR*/
+.sec-navbar .navbar-nav .nav-item a {
+    transition: 0.3s ease;
+    color: #fff;
+}
+
+.sec-navbar .navbar-nav .nav-item a:hover {
+    background-color: rgba(227, 228, 223, 0.37) !important;
+    transition: 0.3s ease;
+    color: #fff !important;
+    border-radius: 20px;
+}
+
+@media(max-width: 600px) {
+
+    .logo-title a,
+    .main-navbar ul li,
+    .main-navbar button,
+    .sec-navbar .navbar-nav li a {
+        font-size: 0.9em !important;
+    }
+}

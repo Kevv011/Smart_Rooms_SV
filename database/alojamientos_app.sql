@@ -29,16 +29,16 @@ CREATE TABLE `usuarios` (
   `estado` ENUM('activo', 'inactivo') NOT NULL DEFAULT 'activo',  		   			-- Estado del usuario
   `fecha_registro` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 		  					-- Fecha en que se crea al usuario
   `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP	-- Registra fecha y hora de actualizaciones de un usuario
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 2;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 4;
 
 --
 -- Usuarios agregados
 --
 
 INSERT INTO `usuarios` (`id`, `nombre`, `apellido`, `telefono`, `correo`, `contrasenia`, `rol`) VALUES
-(1, 'rolando enrique', 'lopez', '+503 7654-6328', 'rolandolopez@gmail.com', '$2y$10$L1GFxX2U0bzRyVbYv.msoO.Eg2yy/T2u8aGZCphLxedSi2v/objsu', 'administrador'), 	 -- pass: rolandolopez
-(2, 'rosa maria', 'galdamez giron', '+503 6789-0045', 'rosagaldamez@gmail.com', '$2y$10$9IihuLmbutHSFw/ELNjXke0Kyzll3iMfzB4UQNYInbfjEuTcfTP7u', 'anfitrion'), -- pass: rosagaldamez
-(3, 'carlos eduardo', 'perez', '+503 7892-8569', 'carlosperez@gmail.com', '$2y$10$eF8POiF81SP7rlFNGLnPT.0BHC66c/nF4uzmevdaMmj3c3z1JDSYq', 'empleado');	     -- pass: carlosperez
+(1, 'rolando enrique', 'lopez', '+503 76546328', 'rolandolopez@gmail.com', '$2y$10$L1GFxX2U0bzRyVbYv.msoO.Eg2yy/T2u8aGZCphLxedSi2v/objsu', 'administrador'), 	 -- pass: rolandolopez
+(2, 'rosa maria', 'galdamez giron', '+503 67890045', 'rosagaldamez@gmail.com', '$2y$10$9IihuLmbutHSFw/ELNjXke0Kyzll3iMfzB4UQNYInbfjEuTcfTP7u', 'anfitrion'), -- pass: rosagaldamez
+(3, 'carlos eduardo', 'perez', '+503 78928569', 'carlosperez@gmail.com', '$2y$10$eF8POiF81SP7rlFNGLnPT.0BHC66c/nF4uzmevdaMmj3c3z1JDSYq', 'empleado');	     -- pass: carlosperez
 
 -- ----------------------------------------------------------------------------------------
 
@@ -69,22 +69,11 @@ INSERT INTO `anfitriones` (`id`,`id_usuario`,`biografia`) VALUES
 
 CREATE TABLE `empleados` (
   `id` INT(10) PRIMARY KEY AUTO_INCREMENT,					-- Campo ID empleado
-  `id_usuario` INT(10) NOT NULL, 					-- Campo ID usuario para FK
-  `fecha_nacimiento`DATE NULL,              				-- Fecha de nacimiento
-  `fecha_contratacion` DATE NOT NULL,						-- Fecha de ingreso a la empresa
-  `direccion` VARCHAR(255) NULL,							-- Direccion de residencia del empleado
-  `cargo` VARCHAR(100) NOT NULL, 							-- cargo en la empresa 
-  `salario` DECIMAL(10,2) NOT NULL,                         -- Salario del empleado
+  `id_usuario` INT(10) NOT NULL, 							-- Campo ID usuario para FK
+  `cargo` VARCHAR(100) NOT NULL, 							-- cargo para mostrar en la plataforma
   `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Registra fecha y hora de actualizaciones de un empleado
   FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE 			-- FK con tabla usuarios
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 2;
-
---
--- Empleados registrados
---
-
-INSERT INTO empleados (id, id_usuario, fecha_nacimiento, fecha_contratacion, direccion, cargo, salario)  
-VALUES (1, 3, '1990-06-15', '2023-01-10', 'Avenida Central #123, San Salvador', 'encargado de operaciones', 750.00);
 
 -- ----------------------------------------------------------------------------------------
 

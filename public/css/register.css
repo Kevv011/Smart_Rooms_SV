@@ -1,0 +1,5 @@
+input .phone-input {
+    -moz-appearance: textfield !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
