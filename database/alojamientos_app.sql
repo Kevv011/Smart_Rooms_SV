@@ -103,11 +103,25 @@ CREATE TABLE `alojamientos` (
 -- Alojamientos agregados
 --
 
--- INSERT INTO `alojamientos` (`id`, `id_anfitrion`, `nombre`, `descripcion`, `direccion`, `precio`, `imagen`, `minpersona`, `maxpersona`, `departamento`) VALUES
--- (1, 1, 'Hotel Paradise', 'Un hotel de lujo con todas las comodidades modernas.', 'Avenida Siempre Viva 123', 120.50, '/Alojamientos_app_PHP/public/uploads/hotel-paradaise.jpg', '3', '10', 'la libertad'),
--- (2, 1, 'Hostal Aurora', 'Alojamiento económico con excelente ubicación.', 'Calle Estrella 45', 30.00, '/Alojamientos_app_PHP/public/uploads/hotel-aurora.jpg', '2', '8', 'la paz'),
--- (3, 2, 'Casa de Playa', 'Casa privada frente al mar, ideal para vacaciones familiares.', 'Carretera costera KM 12', 250.00, '/Alojamientos_app_PHP/public/uploads/casa-playa.jpg', '2', '15', 'sonsonate'),
--- (4, 2, 'Casa de campo', 'Casa en un ambiente primaveral para disfrutar lo hermoso de la naturaleza.', 'ciudad vieja, casa de campo, suchitoto', 175.00, '/Alojamientos_app_PHP/public/uploads/casa-campo.jpg', '1', '10', 'suchitoto');
+INSERT INTO alojamientos (
+    id_anfitrion, nombre, descripcion, direccion, precio, imagen,
+    minpersona, maxpersona, mascota, departamento, eliminado
+) VALUES
+-- Alojamiento 1
+(1, 'Cabaña El Roble', 'Hermosa cabaña rodeada de naturaleza con vistas al bosque.', 'Km 5 Carretera a la montaña, La Palma', 85.00,
+'https://example.com/images/cabana-roble.jpg', 2, 4, TRUE, 'Chalatenango', FALSE),
+
+-- Alojamiento 2
+(2, 'Casa Colonial Centro', 'Alojamiento colonial con todas las comodidades en el corazón de la ciudad.', 'Av. Independencia #123, San Salvador', 120.00,
+'https://example.com/images/casa-colonial.jpg', 2, 6, FALSE, 'San Salvador', FALSE),
+
+-- Alojamiento 3
+(3, 'Apartamento Costa del Sol', 'Moderno apartamento frente al mar ideal para vacaciones familiares.', 'Boulevard Costa del Sol, La Paz', 150.00,
+'https://example.com/images/costa-del-sol.jpg', 4, 8, TRUE, 'La Paz', FALSE),
+
+-- Alojamiento 4
+(1, 'Glamping El Encanto', 'Experiencia de camping de lujo con todas las comodidades.', 'Ruta hacia Apaneca, Ahuachapán', 95.50,
+'https://example.com/images/glamping-encanto.jpg', 2, 3, TRUE, 'Ahuachapán', FALSE);
 
 -- ----------------------------------------------------------------------------------------
 

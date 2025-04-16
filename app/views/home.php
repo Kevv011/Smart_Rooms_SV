@@ -43,6 +43,7 @@
             <!-- Barra de búsqueda -->
             <div class="text-center">
                 <h1>Explora casas y hoteles, encuentra el lugar ideal</h1>
+                <!-- <img src="/<?= $_SESSION['rootFolder'] ?>/public/img/img-card-01.jpg" alt=""> -->
                 <form class="container form-buscar d-flex gap-2 mt-4" action="">
                     <input type="search" name="buscarAlojamiento" class="form-control rounded-pill"
                         placeholder="Busca un alojamiento...">
@@ -53,6 +54,48 @@
             </div>
 
             <!--Cards de Alojamientos-->
+            <div id="cards-presentation" class="row mt-5 mx-2 mx-md-3">
+                <?php if (!empty($alojamientos)): ?>
+                    <?php foreach ($alojamientos as $alojamiento): ?>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                            <div class="card position-relative border-0 shadow-sm">
+                                <div class="img-card-alojamiento position-relative">
+                                    <a class="text-dark text-decoration-none" href="/Alojamientos_app_PHP/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>" target="_self">
+                                        <img class="img-alojamiento img-fluid rounded-top"
+                                            src="<?= htmlspecialchars($alojamiento['imagen']); ?>"
+                                            alt="Alojamiento <?= htmlspecialchars($alojamiento['nombre']); ?>"
+                                            style="object-fit: cover; width: 100%; height: 200px;">
+                                    </a>
+                                </div>
+                                <div class="card-body border-0 px-0">
+                                    <strong class="text-capitalize d-block"><?= htmlspecialchars($alojamiento['nombre']); ?></strong>
+                                    <div class="d-flex gap-2 align-items-center">
+                                        <i class="fa-solid fa-person text-muted"></i>
+                                        <small class="text-muted">
+                                            <?= htmlspecialchars($alojamiento['minpersona']) . " - " . htmlspecialchars($alojamiento['maxpersona']); ?> personas
+                                        </small>
+                                    </div>
+                                    <small class="text-muted text-capitalize d-block"><?= htmlspecialchars($alojamiento['departamento']); ?></small>
+                                    <div class="d-flex gap-1 align-items-center mt-2">
+                                        <strong>$<?= htmlspecialchars(number_format($alojamiento['precio'], 2)); ?> USD</strong>
+                                        <small>/ noche</small>
+                                    </div>
+                                    <?php if ($alojamiento['mascota']): ?>
+                                        <span class="badge bg-success mt-2">Pet friendly</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-secondary mt-2">Sin mascotas</span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="mt-3 text-center text-muted alert alert-warning">
+                        <strong>No hay alojamientos disponibles por el momento.</strong>
+                    </p>
+                <?php endif; ?>
+            </div>
+
         </section>
 
     </main>
