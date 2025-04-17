@@ -11,11 +11,8 @@ $request = $_GET['url'] ?? '';
 
 //Procesamiento de la ruta
 if ($request) {
-    if (strpos($request, $_SESSION['rootFolder']) === 0) {
-        $request = substr($request, strlen($_SESSION['rootFolder']) + 1); 
-    }
 
-    //Divicion de la ruta en segmentos para manejarse
+    //Division de la ruta en segmentos para manejarse
     $segments = explode('/', $request);
     $controller = $segments[0] ?? 'home';
     $action = $segments[1] ?? 'index';

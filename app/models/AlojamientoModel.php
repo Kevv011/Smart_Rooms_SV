@@ -46,7 +46,7 @@ class AlojamientoModel
     {
         $query = "SELECT * FROM alojamientos WHERE id = :id AND eliminado = FALSE";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -66,7 +66,7 @@ class AlojamientoModel
                       departamento = :departamento
                   WHERE id = :id AND eliminado = FALSE";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $nombre);
         $stmt->bindParam(":descripcion", $descripcion);
         $stmt->bindParam(":direccion", $direccion);
@@ -84,7 +84,7 @@ class AlojamientoModel
     {
         $query = "UPDATE alojamientos SET eliminado = TRUE WHERE id = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 
@@ -93,7 +93,7 @@ class AlojamientoModel
     {
         $query = "UPDATE alojamientos SET eliminado = FALSE WHERE id = :id";
         $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":id", $id);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
 }

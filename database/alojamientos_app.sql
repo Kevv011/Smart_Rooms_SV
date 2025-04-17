@@ -97,31 +97,31 @@ CREATE TABLE `alojamientos` (
   `fecha_registro` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 		  					-- Fecha en que se crea el alojamiento
   `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	-- Registra fecha y hora de actualizaciones de un alojamiento
   FOREIGN KEY (`id_anfitrion`) REFERENCES `anfitriones` (`id`) ON DELETE CASCADE  -- FK de anfitriones
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 5;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 1;
 
 --
 -- Alojamientos agregados
 --
 
 INSERT INTO alojamientos (
-    id_anfitrion, nombre, descripcion, direccion, precio, imagen,
+    id, id_anfitrion, nombre, descripcion, direccion, precio, imagen,
     minpersona, maxpersona, mascota, departamento, eliminado
 ) VALUES
 -- Alojamiento 1
-(1, 'Cabaña El Roble', 'Hermosa cabaña rodeada de naturaleza con vistas al bosque.', 'Km 5 Carretera a la montaña, La Palma', 85.00,
-'https://example.com/images/cabana-roble.jpg', 2, 4, TRUE, 'Chalatenango', FALSE),
+(1, 1, 'Cabaña El Roble', 'Hermosa cabaña rodeada de naturaleza con vistas al bosque.', 'Km 5 Carretera a la montaña, La Palma', 85.00,
+'/public/uploads/1_cabana_roble.jpg', 2, 4, TRUE, 'Chalatenango', FALSE),
 
 -- Alojamiento 2
-(2, 'Casa Colonial Centro', 'Alojamiento colonial con todas las comodidades en el corazón de la ciudad.', 'Av. Independencia #123, San Salvador', 120.00,
-'https://example.com/images/casa-colonial.jpg', 2, 6, FALSE, 'San Salvador', FALSE),
+(NULL, 1, 'Casa Colonial Centro', 'Alojamiento colonial con todas las comodidades en el corazón de la ciudad.', 'Av. Independencia #123, San Salvador', 120.00,
+'/public/uploads/2_casa_colonial.jpg', 2, 6, FALSE, 'San Salvador', FALSE),
 
 -- Alojamiento 3
-(3, 'Apartamento Costa del Sol', 'Moderno apartamento frente al mar ideal para vacaciones familiares.', 'Boulevard Costa del Sol, La Paz', 150.00,
-'https://example.com/images/costa-del-sol.jpg', 4, 8, TRUE, 'La Paz', FALSE),
+(NULL, 1, 'Apartamento Costa del Sol', 'Moderno apartamento frente al mar ideal para vacaciones familiares.', 'Boulevard Costa del Sol, La Paz', 150.00,
+'/public/uploads/3_apartamento_costa.jpg', 4, 8, TRUE, 'La Paz', FALSE),
 
 -- Alojamiento 4
-(1, 'Glamping El Encanto', 'Experiencia de camping de lujo con todas las comodidades.', 'Ruta hacia Apaneca, Ahuachapán', 95.50,
-'https://example.com/images/glamping-encanto.jpg', 2, 3, TRUE, 'Ahuachapán', FALSE);
+(NULL, 1, 'Glamping El Encanto', 'Experiencia de camping de lujo con todas las comodidades.', 'Ruta hacia Apaneca, Ahuachapán', 95.50,
+'/public/uploads/4_glamping.jpg', 2, 3, TRUE, 'Ahuachapán', FALSE);
 
 -- ----------------------------------------------------------------------------------------
 
@@ -139,7 +139,7 @@ CREATE TABLE `clientes_alojamientos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-
+SELECT * FROM ALOJAMIENTOS;
 --
 -- Tabla de reservaciones
 -- 

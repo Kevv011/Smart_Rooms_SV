@@ -1,10 +1,3 @@
-<?php
-// $url_vista = $_SERVER['REQUEST_URI'];
-// if ($url_vista !== "/Alojamientos_app_PHP/home/index/" && $url_vista !== "/Alojamientos_app_PHP/Useralojamiento/add_favorito/") {
-//     session_start(); // Inicia la sesion en todas las vistas, menos en home.php y usuario_favoritos.php
-// }
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
