@@ -29,10 +29,22 @@ class AlojamientoModel
         $stmt->bindParam(":maxpersona", $maxpersona);
         $stmt->bindParam(":mascota", $mascota, PDO::PARAM_BOOL);
         $stmt->bindParam(":departamento", $departamento);
+        $stmt->execute();
+
+        return $this->db->lastInsertId(); // Obtiene el ultimo ID ingresado para el metodo "updateImageAlojamiento"
+    }
+
+    //Metodo para poder actualizar el nombre de la imagen una vez ingresado datos textuales de un alojamiento
+    public function updateImageAlojamiento($id, $imagen)
+    {
+        $query = "UPDATE alojamientos SET imagen = :imagen WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":imagen", $imagen);
         return $stmt->execute();
     }
 
-    // Leer todos los alojamientos que NO estén eliminados
+    // Leer todos los alojamientos y los devuelve
     public function readAlojamientos()
     {
         $query = "SELECT * FROM alojamientos";
@@ -52,10 +64,11 @@ class AlojamientoModel
     }
 
     // Editar alojamiento
-    public function editAlojamiento($id, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento)
+    public function editAlojamiento($id, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento)
     {
         $query = "UPDATE alojamientos 
-                  SET nombre = :nombre,
+                  SET id_anfitrion = :id_anfitrion,
+                      nombre = :nombre,
                       descripcion = :descripcion,
                       direccion = :direccion,
                       precio = :precio,
@@ -64,9 +77,10 @@ class AlojamientoModel
                       maxpersona = :maxpersona,
                       mascota = :mascota,
                       departamento = :departamento
-                  WHERE id = :id AND eliminado = FALSE";
+                  WHERE id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":id_anfitrion", $id_anfitrion, PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $nombre);
         $stmt->bindParam(":descripcion", $descripcion);
         $stmt->bindParam(":direccion", $direccion);

@@ -172,6 +172,7 @@ CREATE TABLE `reservaciones` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
+-- JOIN para obtener un anfitrion por alojamiento
 SELECT 
     u.id AS usuario_id,
     u.nombre AS nombre_usuario,

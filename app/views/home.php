@@ -1,3 +1,4 @@
+<?php error_log("Log de prueba desde PHP"); ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,6 +58,7 @@
                 <?php if (!empty($alojamientos)) { ?>
                     <?php
                     $alojamiento_disponible = false;
+                    
                     foreach ($alojamientos as $alojamiento) {
                         if ($alojamiento['eliminado'] == FALSE) {
                             $alojamiento_disponible = true; ?>

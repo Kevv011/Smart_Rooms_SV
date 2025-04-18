@@ -1,5 +1,6 @@
 <?php
 require_once "app/models/AlojamientoModel.php";
+require_once "app/models/UserModel.php";
 
 class AlojamientoController
 {
@@ -10,17 +11,87 @@ class AlojamientoController
             $id = $_GET['id'];
 
             //Obtencion de los datos a partir del modelo
-            $alojamientoModel = new AlojamientoModel();
+            $alojamientoModel = new AlojamientoModel(); // Modelo para la informacion del alojamiento
+            $userModel = new UserModel();               // Modelo para la informacion del anfitrion
             $alojamiento = $alojamientoModel->getAlojamientoByID($id);
+            $userAnfitrion = $userModel->anfitrionByAlojamientoID($id);
 
-            if (!$alojamiento) {
+            if (!$alojamiento || !$userAnfitrion) {
                 echo "El alojamiento no existe.";
                 return;
             }
 
+            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion en caso de un update
+            $anfitriones = $userModel->getAnfitriones();
+
             require_once 'app/views/alojamiento_detail.php';
         } else {
             echo "ID no proporcionado.";
+        }
+    }
+
+    // Método para procesar el formulario y guardar el alojamiento
+    public function create()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            // Datos del formulario
+            $id_anfitrion = trim($_POST['id_anfitrion']);
+            $nombre = trim($_POST['nombre']);
+            $descripcion = trim($_POST['descripcion']);
+            $direccion = trim($_POST['direccion']);
+            $precio = $_POST['precio'];
+            $imagen = $_FILES['imagen'] ?? null;
+            $minpersona = $_POST['minpersona'];
+            $maxpersona = $_POST['maxpersona'];
+            $mascota = trim($_POST['mascota']);
+            $departamento = trim($_POST['departamento']);
+
+            // Llamada al modelo para guardar el alojamiento y obtener el ID para agregarlo al nombre de la imagen
+            $alojamiento = new AlojamientoModel();
+            $newAlojamiento = $alojamiento->createAlojamiento($id_anfitrion, $nombre, $descripcion, $direccion, $precio, NULL, $minpersona, $maxpersona, $mascota, $departamento);
+
+            if ($newAlojamiento) { // Si el resultado fue exitoso, se empieza el proceso para guardar la imagen
+                if ($imagen && $imagen['error'] === 0) {
+
+                    $extension = "." . pathinfo($imagen['name'], PATHINFO_EXTENSION); // Se obtiene la extension de la imagen (.jpg, .avif, etc)
+
+                    // Definir la carpeta de destino para las imágenes a "uploads"
+                    $nombreImagen = $newAlojamiento . "_" . str_replace(" ", "", $nombre) . $extension;              // Nombre de imagen en formato id_nombreAlojamiento_extension
+                    $rutaBase = $_SERVER['DOCUMENT_ROOT'] . '/' . $_SESSION['rootFolder'] . '/public/uploads/';      // Ruta en la que se sube la imagen nueva
+                    $rutaDestino = $rutaBase . $nombreImagen;
+                    $rutaDestinoDB = '/public/uploads/' . $nombreImagen;    // Ruta que se actualizara en la DB
+
+                    // Mover el archivo a la carpeta "uploads"
+                    if (move_uploaded_file($imagen['tmp_name'], $rutaDestino)) {
+
+                        // Llamada al modelo para actualizar la ruta de la imagen
+                        $resultadoImg = $alojamiento->updateImageAlojamiento($newAlojamiento, $rutaDestinoDB);
+
+                        if ($resultadoImg) { // Si el resultado fue exitoso
+                            header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=success&message=" . urlencode("Alojamiento creado exitosamente"));
+                            exit();
+                        } else {
+                            header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Hubo un problema al crear un alojamiento. Intente mas tarde."));
+                            exit();
+                        }
+                    } else {
+                        header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Hubo un problema al cargar la imagen."));
+                        exit();
+                    }
+                } else {
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Ocurrio un error al subir un alojamiento."));
+                    exit();
+                }
+            } else {
+                header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Hubo un problema al crear un alojamiento."));
+                exit();
+            }
+        } else {
+            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion
+            $anfitriones = $userModel->getAnfitriones();
+
+            require_once 'app/views/create_alojamiento.php'; // Acceso al formulario de crear un alojamiento con la solicitud reconocida (GET)
         }
     }
 
@@ -100,6 +171,7 @@ class AlojamientoController
 
             // Datos del formulario
             $idAlojamiento = $_POST['id'];
+            $id_anfitrion = $_POST['id_anfitrion'];
             $nombre = trim($_POST['nombre']);
             $descripcion = trim($_POST['descripcion']);
             $direccion = trim($_POST['direccion']);
@@ -127,7 +199,7 @@ class AlojamientoController
 
                     // Mover el archivo al destino
                     if (move_uploaded_file($imagen['tmp_name'], $rutaDestino)) {
-                        $resultado = $alojamiento->editAlojamiento($idAlojamiento, $nombre, $descripcion, $direccion, $precio, $rutaDestinoDB, $minpersona, $maxpersona, $mascota, $departamento);
+                        $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $rutaDestinoDB, $minpersona, $maxpersona, $mascota, $departamento);
 
                         if ($resultado) {
                             header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
@@ -136,20 +208,23 @@ class AlojamientoController
                             return;
                         }
                     } else {
-                        echo "Error al mover el archivo de imagen.";
+                        header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al mover la imagen del alojamiento"));
+                        return;
                     }
                 } else {
-                    echo "Error al subir la imagen. Verifica el archivo.";
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al subir la nueva imagen del alojamiento"));
+                    return;
                 }
             } else {
                 $imagen = $_POST['imgValue'];
-                $resultado = $alojamiento->editAlojamiento($idAlojamiento, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento);
+                $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento);
 
                 if ($resultado) {
                     header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
                     return;
                 } else {
-                    echo "Hubo un error al guardar el alojamiento.";
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
+                    return;
                 }
             }
         } else {

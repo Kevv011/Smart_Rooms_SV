@@ -19,15 +19,18 @@
         <section class="d-flex flex-wrap justify-content-between">
             <!-- Boton para crear alojamiento -->
             <div>
-                <button class="btn btn-warning">+ Crear</button>
+                <a href='<?= "/" . $_SESSION['rootFolder'] . "/Alojamiento/create" ?>' class="btn btn-warning">+ Crear</a>
             </div>
 
             <!-- Ver alojamientos existentes y eliminados -->
-            <div>
-                <ul class="pagination">
-                    <li class="page-item"><a id="a_disponible" class="page-link bg-success text-white" href="#" onclick="showContent('alojamientos-disponibles')">Disponibles</a></li>
-                    <li class="page-item"><a id="a_eliminado" class="page-link text-dark border-dark" href="#" onclick="showContent('alojamientos-eliminados')">Eliminados</a></li>
-                </ul>
+            <div class="text-center">
+                <div class="btn-group" role="group" aria-label="Opciones de alojamiento">
+                    <input type="radio" class="btn-check" name="tipo_alojamiento" id="disponibles" autocomplete="off" checked onclick="showContent('alojamientos-disponibles')">
+                    <label class="btn btn-outline-success" for="disponibles" id="label_disponibles">Disponibles</label>
+
+                    <input type="radio" class="btn-check" name="tipo_alojamiento" id="eliminados" autocomplete="off" onclick="showContent('alojamientos-eliminados')">
+                    <label class="btn btn-outline-dark" for="eliminados" id="label_eliminados">Eliminados</label>
+                </div>
             </div>
 
             <!-- Form de busqueda de alojamientos -->
@@ -134,22 +137,6 @@
             //Permite alternar el mostrar alojamientos disponibles y eliminados
             document.querySelectorAll('.show-content').forEach(div => div.style.display = 'none');
             document.getElementById(id_alojamiento_container).style.display = 'block';
-
-            //Permite dar efecto a los botones para saber cual esta seleccionado
-            a_eliminado.addEventListener("click", () => {
-                a_disponible.classList.remove("bg-success", "text-white");
-                a_disponible.classList.add("text-dark", "border-dark");
-                a_eliminado.classList.remove("text-dark", "border-dark");
-                a_eliminado.classList.add("bg-danger", "text-white");
-            });
-
-            //Permite dar efecto a los botones para saber cual esta seleccionado
-            a_disponible.addEventListener("click", () => {
-                a_eliminado.classList.add("text-dark", "border-dark");
-                a_eliminado.classList.remove("bg-danger", "text-white");
-                a_disponible.classList.remove("text-dark", "border-dark");
-                a_disponible.classList.add("bg-success", "text-white");
-            });
         }
     </script>
 

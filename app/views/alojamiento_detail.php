@@ -37,16 +37,40 @@
                         <li class="mb-2"><strong>¿Acepta Mascotas?:</strong> <?= ($alojamiento['mascota'] == 1) ? "Sí" : "No"; ?></li>
                     </ul>
 
-                    <!-- Informacion del anfitrion -->
-                    <?php if (isset($userAnfitrion)): ?>
-                        <h2>Información del anfitrión</h2>
-                        <p><strong>Nombre:</strong> <?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?></p>
-                        <p><strong>Correo:</strong> <?= htmlspecialchars($userAnfitrion['correo']) ?></p>
-                        <p><strong>Teléfono:</strong> <?= htmlspecialchars($userAnfitrion['telefono']) ?></p>
-                        <p><strong>Biografía:</strong> <?= nl2br(htmlspecialchars($userAnfitrion['biografia'])) ?></p>
-                    <?php else: ?>
-                        <p>No se encontró información del anfitrión.</p>
-                    <?php endif; ?>
+                    <!-- Información del anfitrión -->
+                    <?php if (!empty($userAnfitrion)) { ?>
+                        <div class="card shadow-sm border-0 mb-4">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0"><i class="fa-solid fa-user me-2"></i>Información del Anfitrión</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-2 text-capitalize">
+                                    <strong>Nombre:</strong><br>
+                                    <?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?>
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Correo:</strong><br>
+                                    <a href="mailto:<?= htmlspecialchars($userAnfitrion['correo']) ?>">
+                                        <?= htmlspecialchars($userAnfitrion['correo']) ?>
+                                    </a>
+                                </p>
+                                <p class="mb-2">
+                                    <strong>Teléfono:</strong><br>
+                                    <a href="tel:<?= htmlspecialchars($userAnfitrion['telefono']) ?>">
+                                        <?= htmlspecialchars($userAnfitrion['telefono']) ?>
+                                    </a>
+                                </p>
+                                <p class="mb-0 text-capitalize">
+                                    <strong>Biografía:</strong><br>
+                                    <?= nl2br(htmlspecialchars($userAnfitrion['biografia'])) ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php } else { ?>
+                        <div class="alert alert-warning text-center" role="alert">
+                            <i class="fa-solid fa-circle-exclamation me-2"></i>No se encontró información del anfitrión.
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
 
@@ -181,23 +205,49 @@
                 </div>
 
                 <!-- Mascota -->
-                <div class="col-6 col-md-2">
-                    <label for="maxpersona" class="form-label">¿Acepta mascotas?</label>
-                    <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" autocomplete="off">
-                    <label class="btn" for="afirmar">Si acepta</label>
-                    <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" checked autocomplete="off">
-                    <label class="btn" for="denegar">No acepta</label>
+                <div class="col-md-2 text-center">
+                    <label class="form-label d-block">¿Acepta mascotas?</label>
+                    <div class="btn-group" role="group" aria-label="Mascotas">
+                        <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" autocomplete="off">
+                        <label class="btn btn-outline-success" for="afirmar">Sí</label>
+
+                        <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" checked autocomplete="off">
+                        <label class="btn btn-outline-danger" for="denegar">No</label>
+                    </div>
                 </div>
 
-                <!-- Imagen -->
-                <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" name="checkImage" value="1" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                        <label class="form-check-label" for="flexSwitchCheckChecked">¿Cambiar imagen?</label>
+                <div class="row my-4">
+                    <!-- Imagen -->
+                    <div class="col-md-8 mb-3 d-flex flex-column justify-content-center align-items-center gap-3 border-end pe-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" name="checkImage" value="1" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
+                            <label class="form-check-label" for="flexSwitchCheckChecked">¿Cambiar imagen?</label>
+                        </div>
+                        <div class="col-md-10">
+                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
+                            <input type="hidden" id="imagenValue" name="imgValue" value="1">
+                        </div>
                     </div>
-                    <div class="col-md-8">
-                        <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
-                        <input type="text" id="imagenValue" name="imgValue" value="1" hidden>
+
+                    <!-- Anfitrión -->
+                    <div class="col-md-4 d-flex flex-column justify-content-center gap-2">
+                        <label for="anfitrion" class="form-label">Anfitrión</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fa-solid fa-user-plus"></i></span>
+
+                            <select class="form-select text-capitalize" name="id_anfitrion" id="anfitrion" required>
+                                <option value="<?= htmlspecialchars($userAnfitrion['id_anfitrion']) ?>" selected><?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?></option>
+                                <?php if (!empty($anfitriones) && !$userAnfitrion['id_anfitrion']) {
+                                    foreach ($anfitriones as $anfitrion) { ?>
+                                        <option value="<?= htmlspecialchars($anfitrion['id_anfitrion']) ?>">
+                                            <?= htmlspecialchars($anfitrion['nombre'] . ' ' . $anfitrion['apellido']) ?>
+                                        </option>
+                                    <?php }
+                                } else { ?>
+                                    <option disabled>No hay anfitriones disponibles</option>
+                                <?php } ?>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
