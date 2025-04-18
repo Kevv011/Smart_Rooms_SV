@@ -36,6 +36,17 @@
                         <li class="mb-2"><strong>Capacidad:</strong> De <?= htmlspecialchars($alojamiento['minpersona']); ?> a <?= htmlspecialchars($alojamiento['maxpersona']); ?> personas.</li>
                         <li class="mb-2"><strong>¿Acepta Mascotas?:</strong> <?= ($alojamiento['mascota'] == 1) ? "Sí" : "No"; ?></li>
                     </ul>
+
+                    <!-- Informacion del anfitrion -->
+                    <?php if (isset($userAnfitrion)): ?>
+                        <h2>Información del anfitrión</h2>
+                        <p><strong>Nombre:</strong> <?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?></p>
+                        <p><strong>Correo:</strong> <?= htmlspecialchars($userAnfitrion['correo']) ?></p>
+                        <p><strong>Teléfono:</strong> <?= htmlspecialchars($userAnfitrion['telefono']) ?></p>
+                        <p><strong>Biografía:</strong> <?= nl2br(htmlspecialchars($userAnfitrion['biografia'])) ?></p>
+                    <?php else: ?>
+                        <p>No se encontró información del anfitrión.</p>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -71,7 +82,7 @@
                         </div>
                     </div>
 
-                    <!--Botones para GENTE CUALQUIERA-->
+                    <!--Botones para CLIENTES-->
                     <?php if (!isset($_SESSION['user_role'])) { ?>
                         <button class="btn w-100 mt-3 text-white" data-bs-toggle="modal" data-bs-target="#login" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
                             Reservar
@@ -81,13 +92,17 @@
 
                         <!--Botones para el ADMINISTRADOR-->
                         <?php if ($_SESSION['user_role'] === "administrador") { ?>
-                            <button type="button" id="editButton" class="btn w-100 mt-3 text-white mb-2" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
-                                <i class="fa-solid fa-pen-to-square me-1"></i> Editar
-                            </button>
-                            <button type="button" class="btn btn-danger text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalDelete"> <i class="fa-solid fa-trash me-1"></i>Eliminar</button>
+                            <?php if ($alojamiento['eliminado'] == FALSE) { ?>
+                                <button type="button" id="editButton" class="btn w-100 mt-3 text-white mb-2" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
+                                    <i class="fa-solid fa-pen-to-square me-1"></i> Editar
+                                </button>
+                                <button type="button" class="btn btn-danger text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalDelete"> <i class="fa-solid fa-trash me-1"></i>Eliminar</button>
+                            <?php } else { ?>
+                                <button type="button" class="btn btn-primary text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalDelete"> <i class="fa-solid fa-trash-can-arrow-up"></i> Restaurar</button>
 
-                            <!--Botones para USUARIO-->
-                        <?php } else { ?>
+                                <!--Botones para USUARIOS-->
+                            <?php }
+                        } else { ?>
                             <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
                             <button class="btn w-100 mt-3 text-white" data-bs-toggle="modal" data-bs-target="#login" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
                                 Reservar
@@ -200,27 +215,51 @@
     <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
 
 
-    <!--Modal de eliminacion-->
+    <!--Modal de eliminacion o restauracion-->
     <div class="modal fade" id="modalDelete" aria-hidden="true" aria-labelledby="LabelDelete" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="LabelDelete">Eliminar Alojamiento</h1>
-                </div>
-                <div class="modal-body">
-                    ¿Está seguro de eliminar este Alojamiento? Este sera movido a alojamientos eliminados...
-                </div>
-                <div class="modal-footer">
-                    <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/softDelete/" method="POST">
 
-                        <!-- id -->
-                        <input type="text" name="idDelete" value="<?= htmlspecialchars($alojamiento['id']); ?>" hidden>
+                <!--Si se va a eliminar el Alojamiento-->
+                <?php if ($alojamiento['eliminado'] == FALSE) { ?>
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="LabelDelete">Eliminar Alojamiento</h1>
+                    </div>
+                    <div class="modal-body">
+                        ¿Está seguro de eliminar este Alojamiento? Este sera movido a alojamientos eliminados...
+                    </div>
+                    <div class="modal-footer">
+                        <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/softDelete/" method="POST">
 
-                        <!-- Botones -->
-                        <button type="submit" class="btn btn-success">Confirmar</button>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                    </form>
-                </div>
+                            <!-- id -->
+                            <input type="text" name="idDelete" value="<?= htmlspecialchars($alojamiento['id']); ?>" hidden>
+
+                            <!-- Botones -->
+                            <button type="submit" class="btn btn-success">Confirmar</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+
+                    <!--Si se va a restaurar el Alojamiento (Permiso de Administrador)-->
+                <?php } else { ?>
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="LabelDelete">Restaurar Alojamiento</h1>
+                    </div>
+                    <div class="modal-body">
+                        ¿Restaurar este Alojamiento? Ahora este será disponible a todo el público
+                    </div>
+                    <div class="modal-footer">
+                        <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/restore/" method="POST">
+
+                            <!-- id -->
+                            <input type="text" name="idRestore" value="<?= htmlspecialchars($alojamiento['id']); ?>" hidden>
+
+                            <!-- Botones -->
+                            <button type="submit" class="btn btn-success">Confirmar</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+                        </form>
+                    </div>
+                <?php } ?>
             </div>
         </div>
     </div>

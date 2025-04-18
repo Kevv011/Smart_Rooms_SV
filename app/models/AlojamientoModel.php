@@ -35,16 +35,16 @@ class AlojamientoModel
     // Leer todos los alojamientos que NO estén eliminados
     public function readAlojamientos()
     {
-        $query = "SELECT * FROM alojamientos WHERE eliminado = FALSE";
+        $query = "SELECT * FROM alojamientos";
         $stmt = $this->db->prepare($query);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Obtener un alojamiento por su ID (si no está eliminado)
-    public function obtenerAlojamientoPorId($id)
+    public function getAlojamientoByID($id)
     {
-        $query = "SELECT * FROM alojamientos WHERE id = :id AND eliminado = FALSE";
+        $query = "SELECT * FROM alojamientos WHERE id = :id";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();

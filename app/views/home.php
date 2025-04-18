@@ -54,45 +54,57 @@
 
             <!--Cards de Alojamientos-->
             <div id="cards-presentation" class="row mt-5 mx-2 mx-md-3">
-                <?php if (!empty($alojamientos)): ?>
-                    <?php foreach ($alojamientos as $alojamiento): ?>
-                        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                            <div class="card position-relative border-0 shadow-sm">
-                                <div class="img-card-alojamiento position-relative">
-                                    <a class="text-dark text-decoration-none" href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>" target="_self">
-                                        <img class="img-alojamiento img-fluid rounded-top"
-                                            src="<?= "/" . $_SESSION['rootFolder'] . htmlspecialchars($alojamiento['imagen']); ?>"
-                                            alt="Alojamiento <?= htmlspecialchars($alojamiento['nombre']); ?>"
-                                            style="object-fit: cover; width: 100%; height: 200px;">
-                                    </a>
-                                </div>
-                                <div class="card-body border-0 px-0">
-                                    <strong class="text-capitalize d-block"><?= htmlspecialchars($alojamiento['nombre']); ?></strong>
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <i class="fa-solid fa-person text-muted"></i>
-                                        <small class="text-muted">
-                                            <?= htmlspecialchars($alojamiento['minpersona']) . " - " . htmlspecialchars($alojamiento['maxpersona']); ?> personas
-                                        </small>
+                <?php if (!empty($alojamientos)) { ?>
+                    <?php
+                    $alojamiento_disponible = false;
+                    foreach ($alojamientos as $alojamiento) {
+                        if ($alojamiento['eliminado'] == FALSE) {
+                            $alojamiento_disponible = true; ?>
+
+                            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                                <div class="card position-relative border-0 shadow-sm">
+                                    <div class="img-card-alojamiento position-relative">
+                                        <a class="text-dark text-decoration-none" href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>" target="_self">
+                                            <img class="img-alojamiento img-fluid rounded-top"
+                                                src="<?= "/" . $_SESSION['rootFolder'] . htmlspecialchars($alojamiento['imagen']); ?>"
+                                                alt="Alojamiento <?= htmlspecialchars($alojamiento['nombre']); ?>"
+                                                style="object-fit: cover; width: 100%; height: 200px;">
+                                        </a>
                                     </div>
-                                    <small class="text-muted text-capitalize d-block"><?= htmlspecialchars($alojamiento['departamento']); ?></small>
-                                    <div class="d-flex gap-1 align-items-center mt-2">
-                                        <strong>$<?= htmlspecialchars(number_format($alojamiento['precio'], 2)); ?> USD</strong>
-                                        <small>/ noche</small>
+                                    <div class="card-body border-0 px-0">
+                                        <strong class="text-capitalize d-block"><?= htmlspecialchars($alojamiento['nombre']); ?></strong>
+                                        <div class="d-flex gap-2 align-items-center">
+                                            <i class="fa-solid fa-person text-muted"></i>
+                                            <small class="text-muted">
+                                                <?= htmlspecialchars($alojamiento['minpersona']) . " - " . htmlspecialchars($alojamiento['maxpersona']); ?> personas
+                                            </small>
+                                        </div>
+                                        <small class="text-muted text-capitalize d-block"><?= htmlspecialchars($alojamiento['departamento']); ?></small>
+                                        <div class="d-flex gap-1 align-items-center mt-2">
+                                            <strong>$<?= htmlspecialchars(number_format($alojamiento['precio'], 2)); ?> USD</strong>
+                                            <small>/ noche</small>
+                                        </div>
+                                        <?php if ($alojamiento['mascota']) { ?>
+                                            <span class="badge bg-success mt-2">Pet friendly</span>
+                                        <?php } else { ?>
+                                            <span class="badge bg-secondary mt-2">Sin mascotas</span>
+                                        <?php } ?>
                                     </div>
-                                    <?php if ($alojamiento['mascota']): ?>
-                                        <span class="badge bg-success mt-2">Pet friendly</span>
-                                    <?php else: ?>
-                                        <span class="badge bg-secondary mt-2">Sin mascotas</span>
-                                    <?php endif; ?>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
+                        <?php
+                        }
+                    }
+                    if (!$alojamiento_disponible) { ?>
+                        <p class="mt-3 text-center text-muted alert alert-warning">
+                            <strong>No hay alojamientos disponibles por el momento.</strong>
+                        </p>
+                    <?php } ?>
+                <?php } else { ?>
                     <p class="mt-3 text-center text-muted alert alert-warning">
-                        <strong>No hay alojamientos disponibles por el momento.</strong>
+                        <strong>No se encontraron alojamientos.</strong>
                     </p>
-                <?php endif; ?>
+                <?php } ?>
             </div>
 
         </section>

@@ -11,7 +11,7 @@ class AlojamientoController
 
             //Obtencion de los datos a partir del modelo
             $alojamientoModel = new AlojamientoModel();
-            $alojamiento = $alojamientoModel->obtenerAlojamientoPorId($id);
+            $alojamiento = $alojamientoModel->getAlojamientoByID($id);
 
             if (!$alojamiento) {
                 echo "El alojamiento no existe.";
@@ -22,6 +22,14 @@ class AlojamientoController
         } else {
             echo "ID no proporcionado.";
         }
+    }
+
+    // Metodo para ver lista de alojamientos (Permisos de administrador)
+    public function alojamientos()
+    {
+        $model = new AlojamientoModel();
+        $alojamientos = $model->readAlojamientos();
+        require_once 'app/views/alojamientos_panel.php';
     }
 
     // Metodo para hacer un SOFT DELETE de un alojamiento (Permiso de Administrador)
@@ -39,10 +47,39 @@ class AlojamientoController
                 $resultado = $alojamientoModel->deleteAlojamiento($id);
 
                 if ($resultado) {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Home/index?alert=success&message=" . urlencode("Alojamiento eliminado exitosamente"));
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=success&message=" . urlencode("Alojamiento eliminado exitosamente"));
                     return;
                 } else {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Home/index?alert=error&message=" . urlencode("Hubo un error al eliminar el alojamiento"));
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Hubo un error al eliminar el alojamiento"));
+                    return;
+                }
+            } else {
+                echo "ID inválido.";
+            }
+        } else {
+            echo "Acceso no permitido.";
+        }
+    }
+
+    // Metodo para restaurar un alojamiento (Permiso de administrador)
+    public function restore()
+    {
+        // POST para obtener al alojamiento por su ID
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idRestore'])) {
+            $id = $_POST['idRestore'];
+
+            // Validar que el ID sea un número entero positivo
+            if (filter_var($id, FILTER_VALIDATE_INT)) {
+
+                //Ejecucion de la funcion del modelo para eliminar alojamientos
+                $alojamientoModel = new AlojamientoModel();
+                $resultado = $alojamientoModel->restoreAlojamiento($id);
+
+                if ($resultado) {
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=success&message=" . urlencode("Alojamiento restaurado exitosamente"));
+                    return;
+                } else {
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/alojamientos?alert=error&message=" . urlencode("Hubo un error al restaurar el alojamiento"));
                     return;
                 }
             } else {
@@ -85,7 +122,7 @@ class AlojamientoController
 
                     $nombreImagen = $idAlojamiento . "_" . str_replace(" ", "", $nombre) . "_updated_" . date("Y-m-d_H-i-s") . $extension;  // Nombre de imagen en formato id_nombre_extension_fechaHora
                     $rutaBase = $_SERVER['DOCUMENT_ROOT'] . '/' . $_SESSION['rootFolder'] . '/public/uploads/';                             // Ruta en la que se sube la imagen nueva
-                    $rutaDestino = $rutaBase . $nombreImagen;           
+                    $rutaDestino = $rutaBase . $nombreImagen;
                     $rutaDestinoDB = '/public/uploads/' . $nombreImagen;    // Ruta que se insertara en la DB
 
                     // Mover el archivo al destino
@@ -94,7 +131,6 @@ class AlojamientoController
 
                         if ($resultado) {
                             header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
-                            
                         } else {
                             header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al actualizar el alojamiento"));
                             return;

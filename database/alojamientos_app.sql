@@ -139,7 +139,7 @@ CREATE TABLE `clientes_alojamientos` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
-SELECT * FROM ALOJAMIENTOS;
+
 --
 -- Tabla de reservaciones
 -- 
@@ -171,3 +171,36 @@ CREATE TABLE `reservaciones` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+SELECT 
+    u.id AS usuario_id,
+    u.nombre AS nombre_usuario,
+    u.apellido,
+    u.telefono,
+    u.correo,
+    u.rol,
+    u.estado,
+    u.fecha_registro AS usuario_registro,
+
+    a.id AS anfitrion_id,
+    a.biografia,
+    a.actualizado_en AS anfitrion_actualizado,
+
+    al.id AS alojamiento_id,
+    al.nombre AS nombre_alojamiento,
+    al.descripcion,
+    al.direccion,
+    al.precio,
+    al.imagen,
+    al.minpersona,
+    al.maxpersona,
+    al.mascota,
+    al.departamento,
+    al.eliminado,
+    al.fecha_registro AS alojamiento_registro,
+    al.actualizado_en AS alojamiento_actualizado
+
+FROM alojamientos al
+JOIN anfitriones a ON al.id_anfitrion = a.id
+JOIN usuarios u ON a.id_usuario = u.id
+WHERE al.id = 1;

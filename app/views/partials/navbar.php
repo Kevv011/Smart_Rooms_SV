@@ -64,12 +64,12 @@
                                     <li><button type="button" class="btn pe-4" data-bs-toggle="modal" data-bs-target="#logout">Cerrar Sesión</button></li>
                                     <hr>
 
-                                    <?php if($_SESSION['user_role'] == 'administrador') { ?>
+                                    <?php if ($_SESSION['user_role'] == 'administrador') { ?>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Usuarios</a></li>
-                                        <li><a href="#" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
 
-                                    <?php }else { ?>
+                                    <?php } else { ?>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-heart text-danger"></i> Favoritos</a></li>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-calendar-days"></i> Mis reservaciones</a></li>
                                     <?php } ?>
