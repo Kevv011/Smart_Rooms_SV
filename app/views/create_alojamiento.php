@@ -99,9 +99,27 @@
                     </div>
 
                     <!-- Imagen -->
-                    <div class="col-12 col-md-10">
+                    <div class="col-12 col-md-6">
                         <label for="imagen" class="form-label">Imagen del Alojamiento</label>
                         <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
+                    </div>
+
+                    <!-- latitud ubicacion -->
+                    <div class="col-md-2">
+                        <label for="precio" class="form-label">Latitud</label>
+                        <div class="input-group">
+                            <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Coordenada de ubicación: [Latitud, longitud]"><i class="fa-solid fa-location-dot"></i></span>
+                            <input type="number" class="form-control" id="precio" name="latitud" step="0.00000001" placeholder="Ej: 13.692940" required>
+                        </div>
+                    </div>
+
+                    <!-- longitud ubicacion -->
+                    <div class="col-md-2">
+                        <label for="precio" class="form-label">longitud</label>
+                        <div class="input-group">
+                            <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Coordenada de ubicación: [Latitud, longitud]"><i class="fa-solid fa-location-dot"></i></span>
+                            <input type="number" class="form-control" id="precio" name="longitud" step="0.00000001" placeholder="Ej: -89.218191" required>
+                        </div>
                     </div>
 
                     <!-- Mascotas -->
@@ -118,7 +136,7 @@
 
                     <!-- Botones -->
                     <div class="col-12 text-center">
-                        <button type="submit" class="btn btn-primary px-4">Confirmar Información</button>
+                        <button type="submit" class="btn btn-primary px-4 mb-2 mb-md-0">Confirmar Información</button>
                         <button type="button" class="btn btn-secondary px-4" data-bs-toggle="modal" data-bs-target="#modalCancelar">Cancelar</button>
                     </div>
 

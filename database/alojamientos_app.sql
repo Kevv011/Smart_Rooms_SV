@@ -93,6 +93,8 @@ CREATE TABLE `alojamientos` (
   `maxpersona` INT(10) NOT NULL,					-- Max personas por alojamiento
   `mascota` BOOLEAN NOT NULL DEFAULT FALSE,         -- Muestra si es permitido mascotas en el alojamiento
   `departamento` VARCHAR(100) NOT NULL,				-- Ubicacion departamental
+  `latitud` DECIMAL(10, 8), 						-- Valor de latitud (Ubicacion con mapa)
+  `longitud` DECIMAL(11, 8),						-- Valor de longitud (Ubicacion con mapa)
   `eliminado` BOOLEAN NOT NULL DEFAULT FALSE, 		-- Manejo de SOFT DELETE para eliminar alojamientos
   `fecha_registro` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 		  					-- Fecha en que se crea el alojamiento
   `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	-- Registra fecha y hora de actualizaciones de un alojamiento
@@ -104,27 +106,30 @@ CREATE TABLE `alojamientos` (
 --
 
 INSERT INTO alojamientos (
-    id, id_anfitrion, nombre, descripcion, direccion, precio, imagen,
-    minpersona, maxpersona, mascota, departamento, eliminado
+    id_anfitrion, nombre, descripcion, direccion, precio, imagen,
+    minpersona, maxpersona, mascota, departamento, latitud, longitud, eliminado
 ) VALUES
 -- Alojamiento 1
-(1, 1, 'Cabaña El Roble', 'Hermosa cabaña rodeada de naturaleza con vistas al bosque.', 'Km 5 Carretera a la montaña, La Palma', 85.00,
-'/public/uploads/1_cabana_roble.jpg', 2, 4, TRUE, 'Chalatenango', FALSE),
+(1, 'Cabaña El Roble', 'Hermosa cabaña rodeada de naturaleza con vistas al bosque.', 
+ 'Km 5 Carretera a la montaña, La Palma', 85.00, '/public/uploads/1_cabana_roble.jpg', 
+ 2, 4, TRUE, 'Chalatenango', 14.358408, -89.121962, FALSE),
 
 -- Alojamiento 2
-(NULL, 1, 'Casa Colonial Centro', 'Alojamiento colonial con todas las comodidades en el corazón de la ciudad.', 'Av. Independencia #123, San Salvador', 120.00,
-'/public/uploads/2_casa_colonial.jpg', 2, 6, FALSE, 'San Salvador', FALSE),
+(1, 'Casa Colonial Centro', 'Alojamiento colonial con todas las comodidades en el corazón de la ciudad.', 
+ 'Av. Independencia #123, San Salvador', 120.00, '/public/uploads/2_casa_colonial.jpg', 
+ 2, 6, FALSE, 'San Salvador', 13.703948, -89.244869, FALSE),
 
 -- Alojamiento 3
-(NULL, 1, 'Apartamento Costa del Sol', 'Moderno apartamento frente al mar ideal para vacaciones familiares.', 'Boulevard Costa del Sol, La Paz', 150.00,
-'/public/uploads/3_apartamento_costa.jpg', 4, 8, TRUE, 'La Paz', FALSE),
+(1, 'Apartamento Costa del Sol', 'Moderno apartamento frente al mar ideal para vacaciones familiares.', 
+ 'Boulevard Costa del Sol, La Paz', 150.00, '/public/uploads/3_apartamento_costa.jpg', 
+ 4, 8, TRUE, 'La Paz', 13.343622, -89.005948, FALSE),
 
 -- Alojamiento 4
-(NULL, 1, 'Glamping El Encanto', 'Experiencia de camping de lujo con todas las comodidades.', 'Ruta hacia Apaneca, Ahuachapán', 95.50,
-'/public/uploads/4_glamping.jpg', 2, 3, TRUE, 'Ahuachapán', FALSE);
+(1, 'Glamping El Encanto', 'Experiencia de camping de lujo con todas las comodidades.', 
+ 'Ruta hacia Apaneca, Ahuachapán', 95.50, '/public/uploads/4_glamping.jpg', 
+ 2, 3, TRUE, 'Ahuachapán', 13.688860, -89.999827, FALSE);
 
 -- ----------------------------------------------------------------------------------------
-
 --
 -- Tabla de relacion `clientes_alojamientos` que gestiona los alojamientos favoritos almacenados por usuario
 --

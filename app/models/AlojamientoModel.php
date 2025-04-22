@@ -14,10 +14,10 @@ class AlojamientoModel
     }
 
     // Crear nuevo alojamiento
-    public function createAlojamiento($id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento)
+    public function createAlojamiento($id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento, $latitud, $longitud)
     {
-        $query = "INSERT INTO alojamientos (id_anfitrion, nombre, descripcion, direccion, precio, imagen, minpersona, maxpersona, mascota, departamento) 
-                  VALUES (:id_anfitrion, :nombre, :descripcion, :direccion, :precio, :imagen, :minpersona, :maxpersona, :mascota, :departamento)";
+        $query = "INSERT INTO alojamientos (id_anfitrion, nombre, descripcion, direccion, precio, imagen, minpersona, maxpersona, mascota, departamento, latitud, longitud) 
+                  VALUES (:id_anfitrion, :nombre, :descripcion, :direccion, :precio, :imagen, :minpersona, :maxpersona, :mascota, :departamento, :latitud, :longitud)";
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":id_anfitrion", $id_anfitrion);
         $stmt->bindParam(":nombre", $nombre);
@@ -29,6 +29,8 @@ class AlojamientoModel
         $stmt->bindParam(":maxpersona", $maxpersona);
         $stmt->bindParam(":mascota", $mascota, PDO::PARAM_BOOL);
         $stmt->bindParam(":departamento", $departamento);
+        $stmt->bindParam(":latitud", $latitud);
+        $stmt->bindParam(":longitud", $longitud);
         $stmt->execute();
 
         return $this->db->lastInsertId(); // Obtiene el ultimo ID ingresado para el metodo "updateImageAlojamiento"
@@ -64,20 +66,36 @@ class AlojamientoModel
     }
 
     // Editar alojamiento
-    public function editAlojamiento($id, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento)
-    {
+    public function editAlojamiento(
+        $id,
+        $id_anfitrion,
+        $nombre,
+        $descripcion,
+        $direccion,
+        $precio,
+        $imagen,
+        $minpersona,
+        $maxpersona,
+        $mascota,
+        $departamento,
+        $latitud,
+        $longitud
+    ) {
         $query = "UPDATE alojamientos 
-                  SET id_anfitrion = :id_anfitrion,
-                      nombre = :nombre,
-                      descripcion = :descripcion,
-                      direccion = :direccion,
-                      precio = :precio,
-                      imagen = :imagen,
-                      minpersona = :minpersona,
-                      maxpersona = :maxpersona,
-                      mascota = :mascota,
-                      departamento = :departamento
-                  WHERE id = :id";
+              SET id_anfitrion = :id_anfitrion,
+                  nombre = :nombre,
+                  descripcion = :descripcion,
+                  direccion = :direccion,
+                  precio = :precio,
+                  imagen = :imagen,
+                  minpersona = :minpersona,
+                  maxpersona = :maxpersona,
+                  mascota = :mascota,
+                  departamento = :departamento,
+                  latitud = :latitud,
+                  longitud = :longitud
+              WHERE id = :id";
+
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":id_anfitrion", $id_anfitrion, PDO::PARAM_INT);
@@ -90,6 +108,9 @@ class AlojamientoModel
         $stmt->bindParam(":maxpersona", $maxpersona);
         $stmt->bindParam(":mascota", $mascota, PDO::PARAM_BOOL);
         $stmt->bindParam(":departamento", $departamento);
+        $stmt->bindParam(":latitud", $latitud);
+        $stmt->bindParam(":longitud", $longitud);
+
         return $stmt->execute();
     }
 

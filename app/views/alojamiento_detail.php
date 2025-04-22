@@ -36,42 +36,10 @@
                         <li class="mb-2"><strong>Capacidad:</strong> De <?= htmlspecialchars($alojamiento['minpersona']); ?> a <?= htmlspecialchars($alojamiento['maxpersona']); ?> personas.</li>
                         <li class="mb-2"><strong>¿Acepta Mascotas?:</strong> <?= ($alojamiento['mascota'] == 1) ? "Sí" : "No"; ?></li>
                     </ul>
-
-                    <!-- Información del anfitrión -->
-                    <?php if (!empty($userAnfitrion)) { ?>
-                        <div class="card shadow-sm border-0 mb-4">
-                            <div class="card-header bg-success text-white">
-                                <h5 class="mb-0"><i class="fa-solid fa-user me-2"></i>Información del Anfitrión</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="mb-2 text-capitalize">
-                                    <strong>Nombre:</strong><br>
-                                    <?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?>
-                                </p>
-                                <p class="mb-2">
-                                    <strong>Correo:</strong><br>
-                                    <a href="mailto:<?= htmlspecialchars($userAnfitrion['correo']) ?>">
-                                        <?= htmlspecialchars($userAnfitrion['correo']) ?>
-                                    </a>
-                                </p>
-                                <p class="mb-2">
-                                    <strong>Teléfono:</strong><br>
-                                    <a href="tel:<?= htmlspecialchars($userAnfitrion['telefono']) ?>">
-                                        <?= htmlspecialchars($userAnfitrion['telefono']) ?>
-                                    </a>
-                                </p>
-                                <p class="mb-0 text-capitalize">
-                                    <strong>Biografía:</strong><br>
-                                    <?= nl2br(htmlspecialchars($userAnfitrion['biografia'])) ?>
-                                </p>
-                            </div>
-                        </div>
-                    <?php } else { ?>
-                        <div class="alert alert-warning text-center" role="alert">
-                            <i class="fa-solid fa-circle-exclamation me-2"></i>No se encontró información del anfitrión.
-                        </div>
-                    <?php } ?>
                 </div>
+
+                <!-- Mapa ubicacion del alojamiento -->
+                <div id="map" style="height: 400px;"><!--Contenido cargado con JS al final y una API-KEY de Google--></div>
             </div>
 
             <!-- Cuadro de reserva -->
@@ -84,16 +52,6 @@
 
                     <div class="border rounded">
                         <div class="row g-0">
-                            <!-- Llegada -->
-                            <div class="col-6 border-end p-3">
-                                <label class="text-uppercase small text-muted mb-1">Llegada</label>
-                                <div>20/4/2025</div>
-                            </div>
-                            <!-- Salida -->
-                            <div class="col-6 p-3">
-                                <label class="text-uppercase small text-muted mb-1">Salida</label>
-                                <div>25/4/2025</div>
-                            </div>
                             <!-- Huéspedes -->
                             <div class="col-12 border-top p-3">
                                 <label class="text-uppercase small text-muted mb-1">Huéspedes</label>
@@ -134,6 +92,37 @@
                     <?php }
                     } ?>
                 </div>
+
+                <!-- Información del anfitrión -->
+                <?php if (!empty($userAnfitrion)) { ?>
+                    <div class="card shadow-sm border-0 mt-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fa-solid fa-user me-2"></i>Información del Anfitrión</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2 text-capitalize d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-circle-user fs-5"></i>
+                                <?= htmlspecialchars($userAnfitrion['nombre_usuario']) ?> <?= htmlspecialchars($userAnfitrion['apellido']) ?>
+                            </p>
+                            <p class="mb-2 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-envelope fs-5"></i>
+                                <a href="mailto:<?= htmlspecialchars($userAnfitrion['correo']) ?>">
+                                    <?= htmlspecialchars($userAnfitrion['correo']) ?>
+                                </a>
+                            </p>
+                            <p class="mb-2 d-flex align-items-center gap-2">
+                                <i class="fa-solid fa-phone"></i>
+                                <a href="tel:<?= htmlspecialchars($userAnfitrion['telefono']) ?>">
+                                    <?= htmlspecialchars($userAnfitrion['telefono']) ?>
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                <?php } else { ?>
+                    <div class="alert alert-warning text-center" role="alert">
+                        <i class="fa-solid fa-circle-exclamation me-2"></i>No se encontró información del anfitrión.
+                    </div>
+                <?php } ?>
             </div>
         </div>
 
@@ -159,15 +148,36 @@
                 </div>
 
                 <!-- Dirección -->
-                <div class="col-12">
+                <div class="col-8">
                     <label for="direccion" class="form-label">Dirección</label>
                     <input type="text" class="form-control" id="direccion" name="direccion" value="<?= htmlspecialchars($alojamiento['direccion']); ?>" required>
                 </div>
 
+                <!-- latitud ubicacion -->
+                <div class="col-md-2">
+                    <label for="precio" class="form-label">Latitud</label>
+                    <div class="input-group">
+                        <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Coordenada de ubicación: [Latitud, longitud]"><i class="fa-solid fa-location-dot"></i></span>
+                        <input type="number" class="form-control" id="precio" name="latitud" value="<?= htmlspecialchars($alojamiento['latitud']); ?>" step="0.00000001" placeholder="Ej: 13.692940" required>
+                    </div>
+                </div>
+
+                <!-- longitud ubicacion -->
+                <div class="col-md-2">
+                    <label for="precio" class="form-label">longitud</label>
+                    <div class="input-group">
+                        <span class="input-group-text" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Coordenada de ubicación: [Latitud, longitud]"><i class="fa-solid fa-location-dot"></i></span>
+                        <input type="number" class="form-control" id="precio" name="longitud" value="<?= htmlspecialchars($alojamiento['longitud']); ?>" step="0.00000001" placeholder="Ej: -89.218191" required>
+                    </div>
+                </div>
+
                 <!-- Precio -->
                 <div class="col-md-2">
-                    <label for="precio" class="form-label">Precio por noche (USD)</label>
-                    <input type="text" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" required>
+                    <label for="precio" class="form-label">Precio por noche</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" required>
+                    </div>
                 </div>
 
                 <!-- Departamento -->
@@ -370,6 +380,37 @@
         checkbox.addEventListener('change', toggleFileInput);
         toggleFileInput();
     </script>
+
+    <!-- Manejo de la ubicacion con un mapa de Google bajo el uso de una API-KEY -->
+    <script>
+        function initMap() {
+            const ubicacion = {
+                lat: <?= $alojamiento['latitud']; ?>,
+                lng: <?= $alojamiento['longitud']; ?>
+            };
+            const mapa = new google.maps.Map(document.getElementById("map"), {
+                zoom: 17,
+                center: ubicacion,
+            });
+
+            const marker = new google.maps.Marker({
+                position: ubicacion,
+                map: mapa,
+                title: "Ubicación del alojamiento"
+            });
+
+            const enlace = `https://www.google.com/maps/dir/?api=1&destination=${ubicacion.lat},${ubicacion.lng}`;
+
+            const info = new google.maps.InfoWindow({
+                content: `<a href="${enlace}" target="_blank">¿Cómo llegar?</a>`
+            });
+
+            marker.addListener("click", () => {
+                info.open(mapa, marker);
+            });
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7GVWPPzUnk2onLwxW7hCWQw11jnHyN0s&callback=initMap"></script>
 
     <!-- Manejo de alertas -->
     <?php if (isset($_GET['alert'])): ?>

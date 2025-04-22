@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Mapa con Leaflet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="map" style="height: 400px;"></div>
+
+    <script>
+        function initMap() {
+            const ubicacion = { lat: 13.69294, lng: -89.21819 };
+            const mapa = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: ubicacion,
+            });
+
+            const marker = new google.maps.Marker({
+                position: ubicacion,
+                map: mapa,
+                title: "Ubicación del alojamiento"
+            });
+
+            const enlace = `https://www.google.com/maps/dir/?api=1&destination=${ubicacion.lat},${ubicacion.lng}`;
+
+            const info = new google.maps.InfoWindow({
+                content: `<a href="${enlace}" target="_blank">¿Cómo llegar?</a>`
+            });
+
+            marker.addListener("click", () => {
+                info.open(mapa, marker);
+            });
+        }
+    </script>
+
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7GVWPPzUnk2onLwxW7hCWQw11jnHyN0s&callback=initMap">
+    </script>
+</body>
+
+</html>

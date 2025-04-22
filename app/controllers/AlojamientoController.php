@@ -46,10 +46,12 @@ class AlojamientoController
             $maxpersona = $_POST['maxpersona'];
             $mascota = trim($_POST['mascota']);
             $departamento = trim($_POST['departamento']);
+            $latitud = trim($_POST['latitud']);
+            $longitud = trim($_POST['longitud']);
 
             // Llamada al modelo para guardar el alojamiento y obtener el ID para agregarlo al nombre de la imagen
             $alojamiento = new AlojamientoModel();
-            $newAlojamiento = $alojamiento->createAlojamiento($id_anfitrion, $nombre, $descripcion, $direccion, $precio, NULL, $minpersona, $maxpersona, $mascota, $departamento);
+            $newAlojamiento = $alojamiento->createAlojamiento($id_anfitrion, $nombre, $descripcion, $direccion, $precio, NULL, $minpersona, $maxpersona, $mascota, $departamento, $latitud, $longitud);
 
             if ($newAlojamiento) { // Si el resultado fue exitoso, se empieza el proceso para guardar la imagen
                 if ($imagen && $imagen['error'] === 0) {
@@ -180,6 +182,8 @@ class AlojamientoController
             $minpersona = $_POST['minpersona'];
             $maxpersona = $_POST['maxpersona'];
             $mascota = $_POST['mascota'];
+            $latitud = trim($_POST['latitud']);
+            $longitud = trim($_POST['longitud']);
 
             $alojamiento_id = $_GET['id']; // Obtener ID de alojamiento con GET para hacer redireccion efectiva
 
@@ -199,7 +203,7 @@ class AlojamientoController
 
                     // Mover el archivo al destino
                     if (move_uploaded_file($imagen['tmp_name'], $rutaDestino)) {
-                        $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $rutaDestinoDB, $minpersona, $maxpersona, $mascota, $departamento);
+                        $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $rutaDestinoDB, $minpersona, $maxpersona, $mascota, $departamento, $latitud, $longitud);
 
                         if ($resultado) {
                             header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
@@ -217,7 +221,7 @@ class AlojamientoController
                 }
             } else {
                 $imagen = $_POST['imgValue'];
-                $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento);
+                $resultado = $alojamiento->editAlojamiento($idAlojamiento, $id_anfitrion, $nombre, $descripcion, $direccion, $precio, $imagen, $minpersona, $maxpersona, $mascota, $departamento, $latitud, $longitud);
 
                 if ($resultado) {
                     header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
