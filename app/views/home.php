@@ -58,7 +58,7 @@
                 <?php if (!empty($alojamientos)) { ?>
                     <?php
                     $alojamiento_disponible = false;
-                    
+
                     foreach ($alojamientos as $alojamiento) {
                         if ($alojamiento['eliminado'] == FALSE) {
                             $alojamiento_disponible = true; ?>
@@ -73,7 +73,7 @@
                                                 style="object-fit: cover; width: 100%; height: 200px;">
                                         </a>
                                     </div>
-                                    <div class="card-body border-0 px-0">
+                                    <div class="card-body border-0 px-2">
                                         <strong class="text-capitalize d-block"><?= htmlspecialchars($alojamiento['nombre']); ?></strong>
                                         <div class="d-flex gap-2 align-items-center">
                                             <i class="fa-solid fa-person text-muted"></i>
@@ -86,11 +86,19 @@
                                             <strong>$<?= htmlspecialchars(number_format($alojamiento['precio'], 2)); ?> USD</strong>
                                             <small>/ noche</small>
                                         </div>
-                                        <?php if ($alojamiento['mascota']) { ?>
-                                            <span class="badge bg-success mt-2">Pet friendly</span>
-                                        <?php } else { ?>
-                                            <span class="badge bg-secondary mt-2">Sin mascotas</span>
-                                        <?php } ?>
+                                        <div class="d-flex justify-content-between">
+                                            <?php if ($alojamiento['mascota']) { ?>
+                                                <span class="badge bg-info-subtle mt-2 text-dark">Pet friendly</span>
+                                            <?php } else { ?>
+                                                <span class="badge bg-secondary mt-2">Sin mascotas</span>
+                                            <?php } ?>
+
+                                            <?php if ($alojamiento['estado_reservado']) { ?>
+                                                <span class="badge bg-success mt-2">Disponible</span>
+                                            <?php } else { ?>
+                                                <span class="badge bg-danger mt-2">Reservado</span>
+                                            <?php } ?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

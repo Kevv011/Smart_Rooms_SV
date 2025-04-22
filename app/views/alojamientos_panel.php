@@ -131,9 +131,7 @@
     <!-- Manejo de contenedores de alojamientos DISPONIBLES y ELIMINADOS -->
     <script>
         function showContent(id_alojamiento_container) {
-            const a_disponible = document.getElementById("a_disponible");
-            const a_eliminado = document.getElementById("a_eliminado");
-
+            
             //Permite alternar el mostrar alojamientos disponibles y eliminados
             document.querySelectorAll('.show-content').forEach(div => div.style.display = 'none');
             document.getElementById(id_alojamiento_container).style.display = 'block';

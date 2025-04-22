@@ -95,12 +95,13 @@ CREATE TABLE `alojamientos` (
   `departamento` VARCHAR(100) NOT NULL,				-- Ubicacion departamental
   `latitud` DECIMAL(10, 8), 						-- Valor de latitud (Ubicacion con mapa)
   `longitud` DECIMAL(11, 8),						-- Valor de longitud (Ubicacion con mapa)
+  `estado_reservado` BOOLEAN NOT NULL DEFAULT TRUE, -- Denota si esta reservado o no el alojamiento
   `eliminado` BOOLEAN NOT NULL DEFAULT FALSE, 		-- Manejo de SOFT DELETE para eliminar alojamientos
   `fecha_registro` TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 		  					-- Fecha en que se crea el alojamiento
   `actualizado_en` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,	-- Registra fecha y hora de actualizaciones de un alojamiento
   FOREIGN KEY (`id_anfitrion`) REFERENCES `anfitriones` (`id`) ON DELETE CASCADE  -- FK de anfitriones
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 1;
-
+SELECT * FROM ALOJAMIENTOS;
 --
 -- Alojamientos agregados
 --
