@@ -85,7 +85,7 @@
                                 <!--Botones para USUARIOS-->
                             <?php }
                         } else { ?>
-                            <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
+                            <button type="button" class="btn btn-danger text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
                             <button class="btn w-100 mt-3 text-white" data-bs-toggle="modal" data-bs-target="#login" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
                                 Reservar
                             </button>
@@ -331,13 +331,10 @@
                 <div class="modal-body text-center">
                     <p class="mb-3">¿Agregar alojamiento como favorito?</p>
 
-                    <form action="/Alojamientos_app_PHP/Useralojamiento/add_favorito/" method="POST">
+                    <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento_favorito/favoritos/" method="POST">
 
                         <!-- id_alojamiento -->
                         <input type="text" name="id_alojamiento" value="<?= htmlspecialchars($alojamiento['id']); ?>" hidden>
-
-                        <!-- id_usuario -->
-                        <input type="text" name="id_usuario" value="<?= $_SESSION['usuario_id']; ?>" hidden>
 
                         <!-- Botones -->
                         <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Agregar</button>

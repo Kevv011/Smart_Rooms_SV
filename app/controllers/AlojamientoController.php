@@ -1,6 +1,6 @@
 <?php
 require_once "app/models/AlojamientoModel.php";
-require_once "app/models/UserModel.php";
+require_once "app/models/AnfitrionModel.php";
 
 class AlojamientoController
 {
@@ -92,7 +92,7 @@ class AlojamientoController
         } else {
             $userModel = new UserModel();                    // Modelo para la informacion del anfitrion
             $anfitriones = $userModel->getAnfitriones();
-
+            
             require_once 'app/views/create_alojamiento.php'; // Acceso al formulario de crear un alojamiento con la solicitud reconocida (GET)
         }
     }
