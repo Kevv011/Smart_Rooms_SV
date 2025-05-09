@@ -86,9 +86,15 @@
                             <?php }
                         } else { ?>
                             <button type="button" class="btn btn-danger text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
-                            <button class="btn w-100 mt-3 text-white" data-bs-toggle="modal" data-bs-target="#login" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
-                                Reservar
-                            </button>
+
+                            <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/reservacion_alojamiento" method="POST">
+
+                                <!-- Input HIDDEN para enviar ID del alojamiento a la reservacion -->
+                                <input type="hidden" name="id_alojamiento" value="<?= $alojamiento['id'] ?>">
+                                <button type="submit" class="btn w-100 mt-3 text-white" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
+                                    Reservar
+                                </button>
+                            </form>
                     <?php }
                     } ?>
                 </div>
