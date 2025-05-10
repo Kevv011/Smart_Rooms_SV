@@ -57,4 +57,48 @@ class ReservationModel
         $count = $stmt->fetchColumn();
         return $count > 0;
     }
+
+    // Metodo para obtener reservaciones por usuario
+    public function getReservationsByUser($id_usuario)
+    {
+        $query = "SELECT r.*, a.nombre AS nombre_alojamiento, a.direccion, a.imagen, a.precio
+                FROM reservaciones r
+                JOIN alojamientos a ON r.id_alojamiento = a.id
+                WHERE r.id_usuario = :id_usuario
+                ORDER BY r.fecha_reservacion DESC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Metodo para obtener una reservacion por ID
+    public function getReservationById($id_reservacion)
+    {
+        $query = "SELECT * FROM reservaciones WHERE id = :id_reservacion";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_reservacion', $id_reservacion, PDO::PARAM_INT);
+        $stmt->execute();
+        $reservacion = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $reservacion ?: null;
+    }
+
+    // Metodo para verificar que una reservacion pertenece a un usuario y alojamiento especifico
+    public function getReservationSecure($id_reservacion, $id_alojamiento, $id_usuario)
+    {
+        $query = "SELECT * FROM reservaciones 
+              WHERE id = :id_reservacion 
+              AND id_alojamiento = :id_alojamiento 
+              AND id_usuario = :id_usuario";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_reservacion', $id_reservacion, PDO::PARAM_INT);
+        $stmt->bindParam(':id_alojamiento', $id_alojamiento, PDO::PARAM_INT);
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

@@ -21,7 +21,7 @@ class AlojamientoController
                 return;
             }
 
-            $anfitrionModel = new AnfitrionModel();                    // Modelo para la informacion del anfitrion en caso de un update
+            // Obteniendo la informacion del anfitrion en caso de un update
             $anfitriones = $anfitrionModel->getAnfitriones();
 
             require_once 'app/views/alojamiento_detail.php';
@@ -245,24 +245,12 @@ class AlojamientoController
             if (isset($_POST['id_alojamiento'])) {
                 $id_alojamiento = $_POST['id_alojamiento'];
 
-                $alojamiento = new AlojamientoModel();
-                $infoAlojamiento = $alojamiento->getAlojamientoByID($id_alojamiento);
-
-
-                // Verificar si se encontró el alojamiento
-                if ($infoAlojamiento) {
-                    require_once 'app/views/reservationForm.php';
-                } else {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=error&message=" . urlencode("El alojamiento obtuvo un error al procesar la reservación"));
-                    return;
-                }
+                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/crear_reservacion?alojamiento=$id_alojamiento");
+                exit;
             } else {
                 header("Location: /" . $_SESSION['rootFolder'] . "/Home/index&alert=error&message=" . urlencode("Este alojamiento no existe o fue eliminado"));
                 return;
             }
-        } else {
-            header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=error&message=" . urlencode("Ocurrio un error al procesar la reservación. Intente nuevamente"));
-            return;
         }
     }
 }

@@ -12,7 +12,11 @@
     <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
 
     <main class="container mb-3" style="margin-top: 150px;">
-        <div class="container mt-5">
+        <a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id'] ?>" class="btn btn-dark" onclick="window.history.back();">
+            ← Regresar
+        </a>
+
+        <div class="container mt-1">
             <section class="container my-3">
                 <div class="row">
                     <!-- Columna: Detalles del alojamiento -->
@@ -171,8 +175,8 @@
             const fechaEntradaDate = new Date(fechaEntrada.value);
             const fechaSalidaDate = new Date(fechaSalida.value);
 
-            const entradaNoPasada = fechaEntradaDate >= diaActual;            // La fecha de entrada no debe de ser menor a la actual
-            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate;       // La fecha de salida no debe de ser menor a la de entrada
+            const entradaNoPasada = fechaEntradaDate >= diaActual; // La fecha de entrada no debe de ser menor a la actual
+            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate; // La fecha de salida no debe de ser menor a la de entrada
 
             btnReservar.disabled = !(entradaValida && salidaValida && huespedesValidos && metodoPagoValido && fechasCorrectas && entradaNoPasada);
         }
