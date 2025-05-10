@@ -33,7 +33,7 @@
                                     <h5 class="card-title"><?= $infoAlojamiento['nombre'] ?></h5>
 
                                     <p class="card-text mb-1">
-                                        <strong>Dirección:</strong> <?= $infoAlojamiento['direccion'] ?>, <?= $infoAlojamiento['departamento'] ?>
+                                        <strong>Dirección:</strong> <?= $infoAlojamiento['direccion'] ?>
                                     </p>
 
                                     <p class="card-text mb-1">
@@ -69,9 +69,12 @@
                                     </p>
                                 </div>
 
-                                <form action="/reservaciones/crear" method="POST" class="row g-3">
+                                <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion" method="POST" class="row g-3">
                                     <!-- ID del alojamiento -->
                                     <input type="hidden" name="id_alojamiento" value="<?= htmlspecialchars($infoAlojamiento['id']) ?>">
+
+                                    <!-- ID del anfitrion -->
+                                    <input type="hidden" name="id_anfitrion" value="<?= htmlspecialchars($infoAlojamiento['id_anfitrion']) ?>">
 
                                     <!-- Número de huéspedes -->
                                     <div class="col-md-6">
@@ -109,7 +112,7 @@
 
                                     <!-- Botón de envío -->
                                     <div class="col-12">
-                                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmReservation">Reservar</button>
+                                        <button type="button" id="btn-reservar" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmReservation" disabled>Reservar</button>
                                     </div>
 
                                     <!--Modal con los detalles y confirmacion de reservacion-->
@@ -130,7 +133,7 @@
                                                     <div id="resumenReservacion"></div>
 
                                                     <button type="submit" class="btn btn-primary mt-2">Confirmar</button>
-                                                    <button class="btn btn-danger mt-2" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="button" class="btn btn-danger mt-2" data-bs-dismiss="modal">Cancelar</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -146,30 +149,51 @@
 
     <!-- Operacionamiento con JS para otener el resumen de la reservacion -->
     <script>
-        // Variables con la informacion a obtener
+        // Variables con la información del formulario
+        const btnReservar = document.getElementById('btn-reservar');
         const confirmationModal = document.querySelector('[data-bs-target="#confirmReservation"]');
         const fechaEntrada = document.getElementById('fecha_entrada');
         const fechaSalida = document.getElementById('fecha_salida');
         const cantHuespedes = document.getElementById('huespedes');
         const metodoPagoSelect = document.getElementById('metodo_pago');
 
-        // Event Listener para obtener la informacion deseada
+        // Función para validar todos los campos del formulario
+        function validarCampos() {
+            const entradaValida = fechaEntrada.value !== "";
+            const salidaValida = fechaSalida.value !== "";
+            const huespedesValidos = cantHuespedes.value !== "";
+            const metodoPagoValido = metodoPagoSelect.value !== "";
+
+            // Validaciones para las fechas
+            const diaActual = new Date();
+            diaActual.setHours(0, 0, 0, 0);
+
+            const fechaEntradaDate = new Date(fechaEntrada.value);
+            const fechaSalidaDate = new Date(fechaSalida.value);
+
+            const entradaNoPasada = fechaEntradaDate >= diaActual;            // La fecha de entrada no debe de ser menor a la actual
+            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate;       // La fecha de salida no debe de ser menor a la de entrada
+
+            btnReservar.disabled = !(entradaValida && salidaValida && huespedesValidos && metodoPagoValido && fechasCorrectas && entradaNoPasada);
+        }
+
+        // Asignación de eventos a los campos para activar la validación en tiempo real
+        fechaEntrada.addEventListener('input', validarCampos);
+        fechaSalida.addEventListener('input', validarCampos);
+        cantHuespedes.addEventListener('change', validarCampos);
+        metodoPagoSelect.addEventListener('change', validarCampos);
+
+        // Mostrar resumen en el modal al hacer clic en el botón
         confirmationModal.addEventListener('click', function() {
             const entrada = new Date(fechaEntrada.value);
             const salida = new Date(fechaSalida.value);
             const huespedes = parseInt(cantHuespedes.value);
             const metodoPago = metodoPagoSelect.value;
 
-            // Validacion para que la fecha de entrada no sea mayor a la de salida
-            if (!entrada || !salida || entrada >= salida) {
-                alert("Por favor seleccione fechas válidas.");
-                return;
-            }   
-
-            // Calculo de los dias de estadia, total por persona y monto total a pagar
+            // Calculo del precio total segun el numero de dias
             const dias = (salida - entrada) / (1000 * 60 * 60 * 24);
-            const precioPorPersonaPorDia = <?= $infoAlojamiento['precio'] ?>;
-            const total = dias * huespedes * precioPorPersonaPorDia;
+            const precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
+            const total = dias * precioNoche;
 
             const resumenHTML = `
             <ul class="list-group">
@@ -180,9 +204,13 @@
                 <li class="list-group-item"><strong>Método de pago:</strong> ${metodoPago.charAt(0).toUpperCase() + metodoPago.slice(1)}</li>
                 <li class="list-group-item"><strong>Total a pagar:</strong> $${total.toFixed(2)}</li>
             </ul>
+            <input type="hidden" name="total_pago" value="${total.toFixed(2)}"> 
         `;
 
-            document.getElementById('resumenReservacion').innerHTML = resumenHTML;
+            const resumenContainer = document.getElementById('resumenReservacion');
+            if (resumenContainer) {
+                resumenContainer.innerHTML = resumenHTML;
+            }
         });
     </script>
 
@@ -206,7 +234,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id']; ?>";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -216,7 +244,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id']; ?>";
                 });
             }
         </script>

@@ -1,7 +1,7 @@
 <?php
 require_once "config/Database.php";
 
-class UserModel
+class AnfitrionModel
 {
     //Variable para almacenar la conexión PDO en cada metodo
     private $db;

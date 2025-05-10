@@ -12,17 +12,17 @@ class AlojamientoController
 
             //Obtencion de los datos a partir del modelo
             $alojamientoModel = new AlojamientoModel(); // Modelo para la informacion del alojamiento
-            $userModel = new UserModel();               // Modelo para la informacion del anfitrion
+            $anfitrionModel = new AnfitrionModel();               // Modelo para la informacion del anfitrion
             $alojamiento = $alojamientoModel->getAlojamientoByID($id);
-            $userAnfitrion = $userModel->anfitrionByAlojamientoID($id);
+            $userAnfitrion = $anfitrionModel->anfitrionByAlojamientoID($id);
 
             if (!$alojamiento || !$userAnfitrion) {
                 echo "El alojamiento no existe.";
                 return;
             }
 
-            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion en caso de un update
-            $anfitriones = $userModel->getAnfitriones();
+            $anfitrionModel = new AnfitrionModel();                    // Modelo para la informacion del anfitrion en caso de un update
+            $anfitriones = $anfitrionModel->getAnfitriones();
 
             require_once 'app/views/alojamiento_detail.php';
         } else {
@@ -90,8 +90,8 @@ class AlojamientoController
                 exit();
             }
         } else {
-            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion
-            $anfitriones = $userModel->getAnfitriones();
+            $anfitrionModel = new anfitrionModel();                    // Modelo para la informacion del anfitrion
+            $anfitriones = $anfitrionModel->getAnfitriones();
 
             require_once 'app/views/create_alojamiento.php'; // Acceso al formulario de crear un alojamiento con la solicitud reconocida (GET)
         }
@@ -247,6 +247,7 @@ class AlojamientoController
 
                 $alojamiento = new AlojamientoModel();
                 $infoAlojamiento = $alojamiento->getAlojamientoByID($id_alojamiento);
+
 
                 // Verificar si se encontró el alojamiento
                 if ($infoAlojamiento) {
