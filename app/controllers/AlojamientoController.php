@@ -227,7 +227,7 @@ class AlojamientoController
                     header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
                     return;
                 } else {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
                     return;
                 }
             }

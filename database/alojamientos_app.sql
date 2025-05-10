@@ -171,7 +171,7 @@ CREATE TABLE `reservaciones` (
 	FOREIGN KEY (`id_anfitrion`) REFERENCES `anfitriones` (`id`) ON DELETE CASCADE,  	-- FK de anfitriones
     FOREIGN KEY (`id_alojamiento`) REFERENCES `alojamientos` (`id`) ON DELETE CASCADE   -- FK con tabla `alojamientos`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 1;
-
+SELECT * FROM RESERVACIONES WHERE id_alojamiento = 3;
 -- ----------------------------------------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

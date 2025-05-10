@@ -12,9 +12,17 @@
     <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
 
     <main class="container mb-3" style="margin-top: 150px;">
-        <a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones" class="btn btn-dark" onclick="window.history.back();">
-            ← Regresar
-        </a>
+
+        <div class="d-flex justify-content-between">
+            <a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones" class="btn btn-dark"> ← Regresar</a>
+
+            <?php if ($_SESSION['user_role'] === 'administrador'): ?>
+                <div>
+                    <button type="button" class="btn btn-secondary"><i class="fa-solid fa-calendar-days"></i> Verificar fechas</button>
+                    <button type="button" class="btn btn-success"><i class="fa-solid fa-pencil"></i> Editar</button>
+                </div>
+            <?php endif; ?>
+        </div>
 
         <div class="container mt-1">
             <section class="container my-3">
@@ -72,14 +80,16 @@
                                     </span>
                                 </div>
 
-                                <div class="alert alert-warning d-flex align-items-center" role="alert">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                    <p style="text-align: justify;">
-                                        Su reservación se encuentra en proceso de confirmación.
-                                    </p>
-                                </div>
-
                                 <section class="row g-3">
+                                    <?php if ($_SESSION['user_role'] === 'administrador'): ?>
+                                        <div class="col-12">
+                                            <p class="text-capitalize"><strong>Cliente: </strong><?= $reservacionById['nombre_user'] ?> <?= $reservacionById['apellido_user'] ?></p>
+                                            <p><strong>Correo: </strong><?= $reservacionById['email_user'] ?></p>
+                                            <p><strong>Telefono: </strong><?= $reservacionById['telefono_user'] ?></p>
+                                        </div>
+
+                                        <hr>
+                                    <?php endif; ?>
 
                                     <!-- Número de huéspedes -->
                                     <div class="col-md-6">

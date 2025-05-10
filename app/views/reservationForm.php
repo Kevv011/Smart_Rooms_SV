@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>Crear reservación</title>
+
+    <style>
+        .reserved-day {
+            background-color: #ffcccc !important;
+            color: red !important;
+            font-weight: bold !important;
+            cursor: not-allowed !important;
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 
 <body style="font-family: 'Open Sans', serif">
@@ -151,6 +163,11 @@
         </div>
     </main>
 
+    <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Operacionamiento con JS para otener el resumen de la reservacion -->
     <script>
         // Variables con la información del formulario
@@ -161,43 +178,48 @@
         const cantHuespedes = document.getElementById('huespedes');
         const metodoPagoSelect = document.getElementById('metodo_pago');
 
-        // Función para validar todos los campos del formulario
-        function validarCampos() {
-            const entradaValida = fechaEntrada.value !== "";
-            const salidaValida = fechaSalida.value !== "";
-            const huespedesValidos = cantHuespedes.value !== "";
-            const metodoPagoValido = metodoPagoSelect.value !== "";
-
-            // Validaciones para las fechas
-            const diaActual = new Date();
-            diaActual.setHours(0, 0, 0, 0);
-
-            const fechaEntradaDate = new Date(fechaEntrada.value);
-            const fechaSalidaDate = new Date(fechaSalida.value);
-
-            const entradaNoPasada = fechaEntradaDate >= diaActual; // La fecha de entrada no debe de ser menor a la actual
-            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate; // La fecha de salida no debe de ser menor a la de entrada
-
-            btnReservar.disabled = !(entradaValida && salidaValida && huespedesValidos && metodoPagoValido && fechasCorrectas && entradaNoPasada);
+        // Crea un Date local para YYYY-MM-DD para el manejo de fechas
+        function parseLocalDate(yyyyMmDd) {
+            const [y, m, d] = yyyyMmDd.split('-').map(Number);
+            return new Date(y, m - 1, d);
         }
 
-        // Asignación de eventos a los campos para activar la validación en tiempo real
+        // Valida que TODOS los campos estén completos y las fechas sean correctas
+        function validarCampos() {
+            const entradaValida = fechaEntrada.value !== '';
+            const salidaValida = fechaSalida.value !== '';
+            const huespedesValidos = cantHuespedes.value !== '';
+            const metodoPagoValido = metodoPagoSelect.value !== '';
+
+            // Validación de fechas
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const fechaEntradaDate = parseLocalDate(fechaEntrada.value);
+            const fechaSalidaDate = parseLocalDate(fechaSalida.value);
+            const entradaNoPasada = fechaEntradaDate >= hoy;
+            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate;
+
+            btnReservar.disabled = !(
+                entradaValida && salidaValida && huespedesValidos && metodoPagoValido && entradaNoPasada && fechasCorrectas
+            );
+        }
+
+        // Asigna listeners a TODOS los inputs relevantes
         fechaEntrada.addEventListener('input', validarCampos);
         fechaSalida.addEventListener('input', validarCampos);
         cantHuespedes.addEventListener('change', validarCampos);
         metodoPagoSelect.addEventListener('change', validarCampos);
 
-        // Mostrar resumen en el modal al hacer clic en el botón
+        // Construccion del resumen con fechas ya parseadas localmente
         confirmationModal.addEventListener('click', function() {
-            const entrada = new Date(fechaEntrada.value);
-            const salida = new Date(fechaSalida.value);
-            const huespedes = parseInt(cantHuespedes.value);
+            const entrada = parseLocalDate(fechaEntrada.value);
+            const salida = parseLocalDate(fechaSalida.value);
+            const huespedes = parseInt(cantHuespedes.value, 10);
             const metodoPago = metodoPagoSelect.value;
 
-            // Calculo del precio total segun el numero de dias
             const dias = (salida - entrada) / (1000 * 60 * 60 * 24);
             const precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
-            const total = dias * precioNoche;
+            const total = dias * precioNoche * huespedes;
 
             const resumenHTML = `
             <ul class="list-group">
@@ -208,20 +230,53 @@
                 <li class="list-group-item"><strong>Método de pago:</strong> ${metodoPago.charAt(0).toUpperCase() + metodoPago.slice(1)}</li>
                 <li class="list-group-item"><strong>Total a pagar:</strong> $${total.toFixed(2)}</li>
             </ul>
-            <input type="hidden" name="total_pago" value="${total.toFixed(2)}"> 
+            <input type="hidden" name="total_pago" value="${total.toFixed(2)}">
         `;
-
-            const resumenContainer = document.getElementById('resumenReservacion');
-            if (resumenContainer) {
-                resumenContainer.innerHTML = resumenHTML;
-            }
+            document.getElementById('resumenReservacion').innerHTML = resumenHTML;
         });
     </script>
 
-    <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
+    <!-- Formato de fecha para inputs DATE y verificar las fechas con reservaciones en cada alojamiento -->
+    <script>
+        const reservedRanges = <?= json_encode($reservedRanges, JSON_UNESCAPED_SLASHES) ?>;
 
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        // Función para verificar si una fecha está dentro de algún rango
+        function isInReservedRange(date) {
+            return reservedRanges.some(range => {
+                const from = new Date(range.from);
+                const to = new Date(range.to);
+                return date >= from && date <= to;
+            });
+        }
+
+        flatpickr("#fecha_entrada", {
+            dateFormat: "Y-m-d",
+            disable: reservedRanges,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const date = new Date(dayElem.dateObj);
+                if (isInReservedRange(date)) {
+                    dayElem.classList.add("reserved-day");
+                }
+            },
+            onChange(selectedDates, dateStr, instance) {
+                salidaPicker.set('minDate', dateStr);
+            }
+        });
+
+        const salidaPicker = flatpickr("#fecha_salida", {
+            dateFormat: "Y-m-d",
+            disable: reservedRanges,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const date = new Date(dayElem.dateObj);
+                if (isInReservedRange(date)) {
+                    dayElem.classList.add("reserved-day");
+                }
+            },
+            onReady: function(selectedDates, dateStr, instance) {
+                instance.set('minDate', document.querySelector('#fecha_entrada').value || 'today');
+            }
+        });
+    </script>
 
     <!-- Manejo de alertas -->
     <?php if (isset($_GET['alert'])): ?>
@@ -238,7 +293,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion?alojamiento=<?= $infoAlojamiento['id']; ?>";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -248,7 +303,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion?alojamiento=<?= $infoAlojamiento['id']; ?>";
                 });
             }
         </script>
