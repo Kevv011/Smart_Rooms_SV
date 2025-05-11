@@ -12,7 +12,7 @@
 </head>
 
 <body style="font-family: 'Open Sans', serif">
-
+    <script src="/<?= $_SESSION['rootFolder'] ?>/public/js/search.js"></script>    
     <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
 
     <main>
@@ -46,7 +46,7 @@
                 <h1>Explora casas y hoteles, encuentra el lugar ideal</h1>
                 <form class="container form-buscar d-flex gap-2 mt-4" action="">
                     <input type="search" name="buscarAlojamiento" class="form-control rounded-pill"
-                        placeholder="Busca un alojamiento...">
+                        placeholder="Busca un alojamiento..." id="searchInput">
                     <button class="btn btn-light rounded-circle" type="submit" style="background:orange;">
                         <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
@@ -157,6 +157,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+
+    
 
 </body>
 
