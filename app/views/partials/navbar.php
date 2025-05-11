@@ -99,7 +99,7 @@
                             : '<a href="/' . $_SESSION['rootFolder'] . '/app/Reservation/reservations" class="nav-link px-2 px-sm-4 text-white">Reservación</a>' ?>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-2 px-sm-4 text-white" href="#">Ofertas</a>
+                        <a class="nav-link px-2 px-sm-4 text-white" href="/<?=$_SESSION['rootFolder']?>/Home/aboutUs">Sobre nosotros</a> <!-- IMPORTANTE -->
                     </li>
                 </ul>
             </div>

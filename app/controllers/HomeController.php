@@ -10,4 +10,7 @@ class HomeController
         $alojamientos = $model->readAlojamientos();
         require_once 'app/views/home.php';
     }
+    public function aboutUs() {
+        require_once 'app/views/partials/about-us.php';
+    }
 }
