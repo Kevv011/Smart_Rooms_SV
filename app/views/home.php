@@ -12,7 +12,7 @@
 </head>
 
 <body style="font-family: 'Open Sans', serif">
-    <script src="/<?= $_SESSION['rootFolder'] ?>/public/js/search.js"></script>    
+
     <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
 
     <main>
@@ -158,7 +158,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 
-    
+    <script src="/<?= $_SESSION['rootFolder'] ?>/public/js/search.js"></script> <!-- Manejo de la barra de busqueda -->
 
 </body>
 
