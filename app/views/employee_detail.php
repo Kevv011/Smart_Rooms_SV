@@ -9,7 +9,8 @@
 
     <body style="font-family: 'Open Sans', serif">
 
-        <?php require "app/views/partials/navbar.php";?> <!-- NAVBAR -->
+    <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
+        
         <main class="container mb-3" style="margin-top: 150px;">
 
             <h2 class="mb-4 text-center text-capitalize"> <?= htmlspecialchars($usuario['nombre']); ?> <?= htmlspecialchars($usuario['apellido']); ?></h2>
@@ -63,7 +64,8 @@
                     </div>
                 </div>
          </main>
-            
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     </body>
 
 </html>
