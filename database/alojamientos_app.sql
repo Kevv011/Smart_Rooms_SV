@@ -149,7 +149,7 @@ SELECT * FROM clientes_alojamientos;
 --
 -- Tabla de reservaciones
 -- 
-
+SELECT * FROM reservaciones;
 CREATE TABLE `reservaciones` (
 	`id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,	-- ID de reservaciones
     `id_usuario` int(10) NOT NULL,						-- Campo ID usuario para FK
@@ -158,6 +158,7 @@ CREATE TABLE `reservaciones` (
 	`huéspedes` INT(10) NOT NULL,						-- Numero de huespedes en la reservacion
     `fecha_entrada` DATE NOT NULL,						-- Fecha de llegada al alojamiento
     `fecha_salida` DATE NOT NULL,						-- Fecha de salida del alojamiento
+    `fecha_salida_real` DATE NULL,						-- Fecha de salida del alojamiento real
     `metodo_pago` VARCHAR(50) NOT NULL,					-- Metodo de pago a usar
     `total_pago` DECIMAL(10,2) NOT NULL,				-- Total de pago calculado segun los dias a quedarse
     `estado` ENUM('pendiente','confirmada','cancelada','completada'), 	-- Estado de una reservacion
@@ -171,16 +172,21 @@ CREATE TABLE `reservaciones` (
 	FOREIGN KEY (`id_anfitrion`) REFERENCES `anfitriones` (`id`) ON DELETE CASCADE,  	-- FK de anfitriones
     FOREIGN KEY (`id_alojamiento`) REFERENCES `alojamientos` (`id`) ON DELETE CASCADE   -- FK con tabla `alojamientos`
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 1;
-SELECT * FROM RESERVACIONES WHERE id_alojamiento = 3;
+
 -- ----------------------------------------------------------------------------------------
+
+CREATE TABLE `comentario_reservacion` (
+    `id` INT(10) PRIMARY KEY AUTO_INCREMENT,
+    `id_reservacion` INT(10) NOT NULL,
+    `id_usuario` INT(10),
+    `estado_asignado` ENUM('pendiente','confirmada','cancelada','completada') NULL,
+    `comentario` TEXT NULL,
+    `fecha_comentario` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`id_reservacion`) REFERENCES `reservaciones`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`) ON DELETE SET NULL
+);
+SELECT * FROM comentario_reservacion;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-SELECT * FROM clientes_alojamientos 
-WHERE id_usuario = 4 AND id_alojamiento = 3;
-          
-SELECT 1 FROM clientes_alojamientos 
-WHERE id_usuario = 4 AND id_alojamiento = 3
-LIMIT 1;

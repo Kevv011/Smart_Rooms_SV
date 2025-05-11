@@ -13,10 +13,10 @@ class ReservationModel
     }
 
     // Metodo para hacer insercion de reservaciones
-    public function create_reservation($id_user, $id_anfitrion, $id_alojamiento, $huespedes, $fecha_ingreso, $fecha_salida, $metodo_pago, $total_pago)
+    public function create_reservation($id_user, $id_anfitrion, $id_alojamiento, $huespedes, $fecha_ingreso, $fecha_salida, $fecha_salida_real, $metodo_pago, $total_pago)
     {
-        $query = "INSERT INTO reservaciones (id_usuario, id_anfitrion, id_alojamiento, huéspedes, fecha_entrada, fecha_salida, metodo_pago, total_pago, estado) 
-                VALUES (:id_usuario, :id_anfitrion, :id_alojamiento, :huespedes, :fecha_entrada, :fecha_salida, :metodo_pago, :total_pago, :estado)";
+        $query = "INSERT INTO reservaciones (id_usuario, id_anfitrion, id_alojamiento, huéspedes, fecha_entrada, fecha_salida, fecha_salida_real, metodo_pago, total_pago, estado) 
+                VALUES (:id_usuario, :id_anfitrion, :id_alojamiento, :huespedes, :fecha_entrada, :fecha_salida, :fecha_salida_real, :metodo_pago, :total_pago, :estado)";
 
         $stmt = $this->db->prepare($query);
 
@@ -26,6 +26,7 @@ class ReservationModel
         $stmt->bindParam(':huespedes', $huespedes, PDO::PARAM_INT);
         $stmt->bindParam(':fecha_entrada', $fecha_ingreso);
         $stmt->bindParam(':fecha_salida', $fecha_salida);
+        $stmt->bindParam(':fecha_salida_real', $fecha_salida_real);
         $stmt->bindParam(':metodo_pago', $metodo_pago);
         $stmt->bindParam(':total_pago', $total_pago);
 
@@ -186,5 +187,69 @@ class ReservationModel
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Metodo para hacer un UPDATE del estado de la reservacion (Permiso de administrador)
+    public function updateEstadoReservacion($id_reservacion, $estado)
+    {
+        $query = "UPDATE reservaciones SET estado = :estado WHERE id = :id";
+
+        $stmt = $this->db->prepare($query);
+
+        $stmt->bindParam(':estado', $estado, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id_reservacion, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
+
+    // Metodo para hacer insercion de comentarios Si se desea al ejecutar la reservacion
+    public function comentario_reservacion($id_reservacion, $id_usuario,  $estado_asignado, $comentario)
+    {
+        $query = "INSERT INTO comentario_reservacion (id_reservacion, id_usuario, comentario, estado_asignado)
+              VALUES (:id_reservacion, :id_usuario, :comentario, :estado_asignado)";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_reservacion', $id_reservacion);
+        $stmt->bindParam(':id_usuario', $id_usuario);
+        $stmt->bindParam(':estado_asignado', $estado_asignado);
+        $stmt->bindParam(':comentario', $comentario);
+        return $stmt->execute();
+    }
+
+    // Metodo para crear un LOG de actualizaciones a una reservacion
+    public function logReservacion($id_reservacion)
+    {
+        $query = "SELECT 
+                    cr.fecha_comentario,
+                    cr.estado_asignado,
+                    cr.comentario,
+                    u.nombre,
+                    u.apellido,
+                    u.rol,
+                    r.estado
+                FROM comentario_reservacion cr
+                LEFT JOIN usuarios u ON cr.id_usuario = u.id
+                INNER JOIN reservaciones r ON cr.id_reservacion = r.id
+                WHERE cr.id_reservacion = :id_reservacion
+                ORDER BY cr.fecha_comentario ASC";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id_reservacion', $id_reservacion, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Metodo para registrar la fecha real de saida de un alojamiento
+    public function updateFechaSalidaReal($id_reservacion, $fecha_real)
+    {
+        $sql = "UPDATE reservaciones 
+            SET fecha_salida_real = :fecha_real 
+            WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':fecha_real', $fecha_real);
+        $stmt->bindParam(':id', $id_reservacion, PDO::PARAM_INT);
+
+        return $stmt->execute();
     }
 }

@@ -136,7 +136,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -146,7 +146,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones";
                 });
             }
         </script>

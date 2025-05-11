@@ -197,7 +197,7 @@
             const fechaEntradaDate = parseLocalDate(fechaEntrada.value);
             const fechaSalidaDate = parseLocalDate(fechaSalida.value);
             const entradaNoPasada = fechaEntradaDate >= hoy;
-            const fechasCorrectas = fechaSalidaDate > fechaEntradaDate;
+            const fechasCorrectas = fechaSalidaDate >= fechaEntradaDate;
 
             btnReservar.disabled = !(
                 entradaValida && salidaValida && huespedesValidos && metodoPagoValido && entradaNoPasada && fechasCorrectas
@@ -217,9 +217,15 @@
             const huespedes = parseInt(cantHuespedes.value, 10);
             const metodoPago = metodoPagoSelect.value;
 
-            const dias = (salida - entrada) / (1000 * 60 * 60 * 24);
-            const precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
-            const total = dias * precioNoche * huespedes;
+            let dias = (salida - entrada) / (1000 * 60 * 60 * 24);
+            let precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
+            let total = dias * precioNoche;
+
+            if (dias <= 1) {
+                dias = 1;
+                precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
+                total = dias * precioNoche;
+            }
 
             const resumenHTML = `
             <ul class="list-group">
