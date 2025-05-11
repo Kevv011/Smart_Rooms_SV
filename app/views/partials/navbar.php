@@ -34,11 +34,10 @@
                         <!--DROPDOWN USER-->
                         <div class="btn-group dropstart">
 
-
                             <button class="btn dropdown-toggle border rounded-pill d-flex justify-content-center align-items-center gap-2 p-2 px-3 text-black" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fa-solid fa-bars"></i>
 
-                                <div class="d-flex justify-content-center align-items-center text-center">
+                                <div class= "d-flex justify-content-center align-items-center text-center">
                                     <?php
                                     if (!isset($_SESSION['id_user'])) {
                                         echo '<i class="fa-solid fa-user fs-5"></i>';
@@ -52,8 +51,7 @@
                                         echo '</div>';
                                     }
                                     ?>
-                                </div>
-
+                                </div>  
                             </button>
 
                             <ul class="dropdown-menu" style="width: 217px;">
@@ -94,16 +92,7 @@
                         <a class="nav-link px-2 px-sm-4 text-white" href="#">Contacto</a>
                     </li>
                     <li class="nav-item">
-<<<<<<< HEAD
-                        <?= (!isset($_SESSION['id_user'], $_SESSION['user_name'], $_SESSION['user_role']))
-                            ? '<a href="#" data-bs-toggle="modal" data-bs-target="#login" class="nav-link px-2 px-sm-4 text-white">Reservación</a>'
-                            : '<a href="/' . $_SESSION['rootFolder'] . '/app/Reservation/reservations" class="nav-link px-2 px-sm-4 text-white">Reservación</a>' ?>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-2 px-sm-4 text-white" href="/<?=$_SESSION['rootFolder']?>/Home/aboutUs">Sobre nosotros</a> <!-- IMPORTANTE -->
-=======
-                        <a class="nav-link px-2 px-sm-4 text-white" href="#">Ofertas</a>
->>>>>>> Kevin_2
+                        <a class="nav-link px-2 px-sm-4 text-white" href="/<?=$_SESSION['rootFolder']?>/Home/aboutUs">Sobre Nosotros</a>
                     </li>
                 </ul>
             </div>
