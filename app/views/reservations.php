@@ -27,34 +27,34 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     <?php if (!empty($reservaciones)): ?>
                         <?php foreach ($reservaciones as $reserva): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($reserva['id']) ?></td>
-                                <td class="d-none d-md-table-cell">
-                                    <?php if (!empty($reserva['imagen'])): ?>
-                                        <img src="/<?= $_SESSION['rootFolder'] ?>/<?= htmlspecialchars($reserva['imagen']) ?>" alt="Imagen" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
-                                    <?php else: ?>
-                                        <span class="text-muted">Sin imagen</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?= htmlspecialchars($reserva['nombre_alojamiento']) ?></td>
-                                <td><?= date("d/m/Y", strtotime($reserva['fecha_reservacion'])) ?></td>
-                                <td>
-                                    <span class="badge text-dark
-                            <?= $reserva['estado'] === 'pendiente' ? 'bg-warning' : ($reserva['estado'] === 'confirmada' ? 'bg-success' : ($reserva['estado'] === 'cancelada' ? 'bg-danger' : 'bg-secondary')) ?>">
-                                        <?= ucfirst($reserva['estado']) ?>
-                                    </span>
-                                </td>
-                                <td>
-                                    <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/post_reservacion_alojamiento" method="POST">
-                                        <input type="hidden" name="id_reservacion" value="<?= $reserva['id'] ?>">
-                                        <input type="hidden" name="id_alojamiento" value="<?= $reserva['id_alojamiento'] ?>">
-                                        <button type="submit" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
-                                    </form>
-                                </td>
-                            </tr>
+                            <?php if (!$reserva['eliminado']): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($reserva['id']) ?></td>
+                                    <td class="d-none d-md-table-cell">
+                                        <?php if (!empty($reserva['imagen'])): ?>
+                                            <img src="/<?= $_SESSION['rootFolder'] ?>/<?= htmlspecialchars($reserva['imagen']) ?>" alt="Imagen" width="50" height="50" style="object-fit: cover; border-radius: 5px;">
+                                        <?php else: ?>
+                                            <span class="text-muted">Sin imagen</span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= htmlspecialchars($reserva['nombre_alojamiento']) ?></td>
+                                    <td><?= date("d/m/Y", strtotime($reserva['fecha_reservacion'])) ?></td>
+                                    <td>
+                                        <span class="badge text-dark <?= $reserva['estado'] === 'pendiente' ? 'bg-warning' : ($reserva['estado'] === 'confirmada' ? 'bg-success' : ($reserva['estado'] === 'cancelada' ? 'bg-danger' : 'bg-secondary')) ?>">
+                                            <?= ucfirst($reserva['estado']) ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/post_reservacion_alojamiento" method="POST">
+                                            <input type="hidden" name="id_reservacion" value="<?= $reserva['id'] ?>">
+                                            <input type="hidden" name="id_alojamiento" value="<?= $reserva['id_alojamiento'] ?>">
+                                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
@@ -81,29 +81,29 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php if (!empty($reservacionesAdmin)): ?>
                             <?php foreach ($reservacionesAdmin as $reserva): ?>
-                                <tr>
-                                    <td><?= htmlspecialchars($reserva['id']) ?></td>
-                                    <td><?= date("d/m/Y", strtotime($reserva['fecha_reservacion'])) ?></td>
-                                    <td><?= htmlspecialchars($reserva['nombre_alojamiento']) ?></td>
-                                    <td><?= date("d/m/Y", strtotime($reserva['fecha_entrada'])) ?></td>
-                                    <td><?= date("d/m/Y", strtotime($reserva['fecha_salida'])) ?></td>
-                                    <td>
-                                        <span class="badge text-dark
-                                <?= $reserva['estado'] === 'pendiente' ? 'bg-warning' : ($reserva['estado'] === 'confirmada' ? 'bg-success' : ($reserva['estado'] === 'cancelada' ? 'bg-danger' : 'bg-secondary')) ?>">
-                                            <?= ucfirst($reserva['estado']) ?>
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/post_reservacion_alojamiento" method="POST">
-                                            <input type="hidden" name="id_reservacion" value="<?= $reserva['id'] ?>">
-                                            <input type="hidden" name="id_alojamiento" value="<?= $reserva['id_alojamiento'] ?>">
-                                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
-                                        </form>
-                                    </td>
-                                </tr>
+                                <?php if (!$reserva['eliminado']): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($reserva['id']) ?></td>
+                                        <td><?= date("d/m/Y", strtotime($reserva['fecha_reservacion'])) ?></td>
+                                        <td><?= htmlspecialchars($reserva['nombre_alojamiento']) ?></td>
+                                        <td><?= date("d/m/Y", strtotime($reserva['fecha_entrada'])) ?></td>
+                                        <td><?= date("d/m/Y", strtotime($reserva['fecha_salida'])) ?></td>
+                                        <td>
+                                            <span class="badge text-dark <?= $reserva['estado'] === 'pendiente' ? 'bg-warning' : ($reserva['estado'] === 'confirmada' ? 'bg-success' : ($reserva['estado'] === 'cancelada' ? 'bg-danger' : 'bg-secondary')) ?>">
+                                                <?= ucfirst($reserva['estado']) ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/post_reservacion_alojamiento" method="POST">
+                                                <input type="hidden" name="id_reservacion" value="<?= $reserva['id'] ?>">
+                                                <input type="hidden" name="id_alojamiento" value="<?= $reserva['id_alojamiento'] ?>">
+                                                <button type="submit" class="btn btn-primary"><i class="fa-solid fa-eye"></i></button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>

@@ -82,7 +82,7 @@ class ReservationModel
     // Metodo para obtener reservaciones por usuario
     public function getReservationsByUser($id_usuario)
     {
-        $query = "SELECT r.*, a.nombre AS nombre_alojamiento, a.direccion, a.imagen, a.precio
+        $query = "SELECT r.*, a.nombre AS nombre_alojamiento, a.direccion, a.imagen, a.precio, a.eliminado
                 FROM reservaciones r
                 JOIN alojamientos a ON r.id_alojamiento = a.id
                 WHERE r.id_usuario = :id_usuario
@@ -177,7 +177,7 @@ class ReservationModel
                     r.fecha_reservacion,
                     u.nombre AS nombre_usuario,
                     a.nombre AS nombre_alojamiento,
-                    a.imagen
+                    a.eliminado
                 FROM reservaciones r
                 INNER JOIN usuarios u ON r.id_usuario = u.id
                 INNER JOIN alojamientos a ON r.id_alojamiento = a.id

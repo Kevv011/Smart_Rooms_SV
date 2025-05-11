@@ -20,11 +20,13 @@ class ReservationController
             $metodo_pago = $_POST['metodo_pago'];
             $total_pago = $_POST['total_pago'];
 
+            $alojamiento = new AlojamientoModel();
             $reservacion = new ReservationModel();
             $reservacionDisponible = $reservacion->AlojamientoDisponible($id_alojamiento, $fecha_ingreso, $fecha_salida);
+            $alojamientoDisponible = $alojamiento->alojamientoDisponible($id_alojamiento); // Verifica qye el alojamiento no este eliminado
 
             // Validar si ya existe una reserva para el alojamiento
-            if ($reservacionDisponible) {
+            if ($reservacionDisponible && $alojamientoDisponible) {
 
                 // Crear la reservación si no interfieren las fechas
                 $createReservacion = $reservacion->create_reservation($id_user, $id_anfitrion, $id_alojamiento, $huespedes, $fecha_ingreso, $fecha_salida, $fecha_salida_real, $metodo_pago, $total_pago);
@@ -35,7 +37,7 @@ class ReservationController
                     header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$id_alojamiento&alert=error&message=" . urlencode("Ocurrió un error al crear la reservación. Inténtalo más tarde"));
                 }
             } else {
-                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/crear_reservacion?alojamiento=$id_alojamiento&alert=error&message=" . urlencode("Ya existe una reservación para las fechas seleccionadas. Elige otro rango de fechas según disponibilidad del alojamiento."));
+                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/crear_reservacion?alojamiento=$id_alojamiento&alert=error&message=" . urlencode("Ya existe una reservación para las fechas seleccionadas o el alojamiento pudo haber sido eliminado"));
                 return;
             }
         } else {
