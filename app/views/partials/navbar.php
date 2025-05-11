@@ -66,7 +66,9 @@
 
                                     <?php if ($_SESSION['user_role'] == 'administrador') { ?>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Usuarios</a></li>
+                                        
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Usuario/usuarios" class="btn"><i class="fa-solid fa-user"></i> Empleados</a></li>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
 
                                     <?php } else { ?>

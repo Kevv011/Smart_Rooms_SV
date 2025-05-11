@@ -88,4 +88,57 @@ class UserModel
             return [];
         }
     }
+    public function readEmpleado1()
+    {
+        $query = "SELECT * FROM usuarios";
+        $stmt = $this->db->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+     public function getUserByID($id)
+    {
+        $query = "SELECT * FROM usuarios WHERE id = :id";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Metodo para obtener a todos los empleados
+   /* public function getEmpleado($id)
+    {
+        try {
+            $query = "SELECT 
+                        u.id AS id_usuario,
+                        u.nombre,
+                        u.apellido,
+                        u.telefono,
+                        u.correo,
+                        u.rol,
+                        u.estado,
+                        u.fecha_registro,
+                        e.id AS id_empleado,
+                        e.cargo,
+                        e.fecha_nacimiento,
+                        e.fecha_contratacion,
+                        e.direccion,
+                        e.salario
+                        e.actualizado_en AS actualizado_empleado
+                    FROM empleados e
+                    INNER JOIN usuarios u ON e.id_usuario = u.id
+                    WHERE e.id = :id";
+
+            $stmt = $this->db->prepare($query);
+            $rol = 'empleado';
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            error_log("Error al obtener empleados: " . $e->getMessage());
+            return [];
+        }
+    }*/
+
+    
 }
