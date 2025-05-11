@@ -104,5 +104,31 @@ class UserModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function UsuarioEmpleadoById($idEmpleado)
+    {
+        $query = "
+        SELECT 
+            u.id AS id_usuario,
+            u.nombre,
+            u.apellido,
+            u.telefono,
+            u.correo,
+            u.rol,
+            u.estado,
+            u.fecha_registro AS usuario_registro,
+
+            e.id AS id_empleado,
+            e.cargo,
+            e.actualizado_en
+        FROM usuarios u
+        INNER JOIN empleados e ON e.id_usuario = u.id
+        WHERE u.id = :idEmpleado
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idEmpleado', $idEmpleado, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
     
 }

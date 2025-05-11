@@ -16,13 +16,10 @@ class UsuarioController
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
 
-            //Obtencion de los datos a partir del modelo
-            $userModel = new UserModel(); // Modelo para la informacion del alojamiento
-            $empleModel = new UserModel();               // Modelo para la informacion del anfitrion
-            $usertotal = $userModel->getUserByID($id);
-           // $userEmpleado = $empleModel->getEmpleado($id);
+            $usuarioModel = new UserModel(); 
+            $usuario = $usuarioModel->UsuarioEmpleadoById($id);
 
-            if (!$usertotal) {
+            if (!$usuario) {
                 echo "El usuario no existe.";
                 return;
             }
