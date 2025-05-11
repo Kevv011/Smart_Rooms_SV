@@ -182,7 +182,7 @@
                     <label for="precio" class="form-label">Precio por noche</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" required>
+                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" step="0.01" required>
                     </div>
                 </div>
 
