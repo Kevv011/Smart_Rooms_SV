@@ -131,4 +131,31 @@ class UserModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
     
+    public function editUsuario(
+        $id,
+        $nombre,
+        $apellido,
+        $telefono,
+        $correo,
+        $rol
+    ){
+         $query = "UPDATE usuarios 
+              SET 
+                  nombre = :nombre,
+                  apellido = :apellido,
+                  telefono = :telefono,
+                  precio = :precio,
+                  rol = :rol
+              WHERE id = :id";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":nombre", $nombre, PDO::PARAM_INT);
+        $stmt->bindParam(":apellido", $apellido);
+        $stmt->bindParam(":telefono", $telefono);
+        $stmt->bindParam(":correo", $correo);
+        $stmt->bindParam(":rol", $rol);
+        return $stmt->execute();
+    }
+        
 }

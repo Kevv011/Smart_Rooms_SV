@@ -63,10 +63,80 @@
                         </div>
                     </div>
                 </div>
+
+         <section id="editForm" class="mt-3" style="display: none;">
+
+            <hr>
+
+            <form action="/<?= $_SESSION['rootFolder'] ?>/Usuario/update" method="POST" enctype="multipart/form-data" class="row g-3 mt-3">
+
+                <!-- id -->
+                <input type="text" name="id" value="<?= htmlspecialchars($usuario['id_usuario']); ?>" hidden>
+
+                <!-- Nombre -->
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre </label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($usuario['nombre']); ?>" required>
+                </div>
+
+                <!-- Apellido -->
+                <div class="col-md-6">
+                    <label for="descripcion" class="form-label">Apellido</label>
+                    <input type="text" class="form-control" id="descripcion" name="descripcion" value="<?= htmlspecialchars($usuario['apellido']); ?>" required>
+                </div>
+
+                <!-- Correo -->
+                <div class="col-8">
+                    <label for="direccion" class="form-label">Correo</label>
+                    <input type="text" class="form-control" id="direccion" name="direccion" value="<?= htmlspecialchars($usuario['correo']); ?>" required>
+                </div>
+
+                <!-- Rol -->
+                <div class="col-md-4">
+                    <label for="departamento" class="form-label">Rol:</label>
+                    <select class="form-select" id="departamento" name="departamento" required>
+                        <option value="<?= htmlspecialchars($usuario['rol']); ?>" selected><?= htmlspecialchars($usuario['rol']); ?></option>
+                        <option value="ahuachapan">administrador</option>
+                        <option value="santa ana">anfitrion</option>
+                        <option value="sonsonate">empleado</option>
+                    </select>
+                </div>
+
+                <div class="row my-4">
+
+                    <!-- Cargo -->
+                    <div class="col-md-6">
+                        <label for="nombre" class="form-label">Cargo </label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="<?= htmlspecialchars($usuario['cargo']); ?>" required>
+                    </div>
+                </div>
+
+                <!-- Botón -->
+                <div class="col-12 text-center mb-4">
+                    <button type="submit" class="btn btn-light" style="background-color: #a4ff9d !important;">Confirmar Información</button>
+                    <a href="/<?= $_SESSION['rootFolder'] ?>/Usuario/getUsuario?id=<?= $usuario['id_usuario']; ?>" class="btn btn-ligth" style="background-color: #ffbd64 !important;">Cancelar</a>
+                </div>
+
+                <hr>
+            </form>
+        </section>
+
          </main>
              <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
 
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+                <script>
+                    //Hace aparecer el form de editar y desaparece el boton
+                    const editButton = document.getElementById('editButton');
+                    editButton.addEventListener("click", () => {
+
+                        const editForm = document.getElementById('editForm');
+                        editForm.style.display = "block";
+                        editButton.style.display = "none";
+                    });
+                    checkbox.addEventListener('change', toggleFileInput);
+                    toggleFileInput();
+                 </script>
 
     </body>
 
