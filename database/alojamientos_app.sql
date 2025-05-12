@@ -75,6 +75,8 @@ CREATE TABLE `empleados` (
   FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE 			-- FK con tabla usuarios
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 2;
 
+INSERT INTO `empleados` (`id`,`id_usuario`,`cargo`) VALUES
+(1, 3, 'Administrador de reservaciones');
 -- ----------------------------------------------------------------------------------------
 
 --
@@ -189,4 +191,4 @@ SELECT * FROM comentario_reservacion;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
