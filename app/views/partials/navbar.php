@@ -64,10 +64,10 @@
 
                                     <!-- OPCIONES PARA ADMINISTRADOR -->
                                     <?php if ($_SESSION['user_role'] == 'administrador') { ?>
-                                        <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Usuarios</a></li>
                                         
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
 
+                                        <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Anfitriones</a></li>
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Empleado/empleados" class="btn"><i class="fa-solid fa-user"></i> Empleados</a></li>
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
 
@@ -91,9 +91,6 @@
 
                 <!--LISTA NAV-->
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link px-2 px-sm-4 text-white" href="#">Contacto</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link px-2 px-sm-4 text-white" href="/<?=$_SESSION['rootFolder']?>/Home/aboutUs">Sobre Nosotros</a>
                     </li>
