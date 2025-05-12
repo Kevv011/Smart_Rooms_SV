@@ -182,7 +182,7 @@
                     <label for="precio" class="form-label">Precio por noche</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" required>
+                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" step="0.01" required>
                     </div>
                 </div>
 
@@ -224,10 +224,10 @@
                 <div class="col-md-2 text-center">
                     <label class="form-label d-block">¿Acepta mascotas?</label>
                     <div class="btn-group" role="group" aria-label="Mascotas">
-                        <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" autocomplete="off">
+                        <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" checked autocomplete="off">
                         <label class="btn btn-outline-success" for="afirmar">Sí</label>
 
-                        <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" checked autocomplete="off">
+                        <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" autocomplete="off">
                         <label class="btn btn-outline-danger" for="denegar">No</label>
                     </div>
                 </div>

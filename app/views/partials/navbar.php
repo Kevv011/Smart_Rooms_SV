@@ -68,12 +68,12 @@
                                     <?php if ($_SESSION['user_role'] == 'administrador') { ?>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Usuarios</a></li>
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
-                                        <li><a href="#" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
 
                                         <!-- OPCIONES PARA CLIENTES -->
                                     <?php } else { ?>
-                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento_favorito/favoritos/" class="btn"><i class="fa-solid fa-heart text-danger"></i> Favoritos</a></li>
-                                        <li><a href="#" class="btn"><i class="fa-solid fa-calendar-days"></i> Mis reservaciones</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento_favorito/favoritos/" class="btn pe-5"><i class="fa-solid fa-heart text-danger"></i> Favoritos</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones" class="btn"><i class="fa-solid fa-calendar-days"></i> Mis reservaciones</a></li>
                                     <?php } ?>
                                 <?php } ?>
                             </ul>
@@ -92,11 +92,6 @@
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link px-2 px-sm-4 text-white" href="#">Contacto</a>
-                    </li>
-                    <li class="nav-item">
-                        <?= (!isset($_SESSION['id_user'], $_SESSION['user_name'], $_SESSION['user_role']))
-                            ? '<a href="#" data-bs-toggle="modal" data-bs-target="#login" class="nav-link px-2 px-sm-4 text-white">Reservación</a>'
-                            : '<a href="/' . $_SESSION['rootFolder'] . '/app/Reservation/reservations" class="nav-link px-2 px-sm-4 text-white">Reservación</a>' ?>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-2 px-sm-4 text-white" href="#">Ofertas</a>

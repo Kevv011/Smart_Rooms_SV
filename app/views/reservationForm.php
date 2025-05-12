@@ -4,7 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>Crear reservación</title>
+
+    <style>
+        .reserved-day {
+            background-color: #ffcccc !important;
+            color: red !important;
+            font-weight: bold !important;
+            cursor: not-allowed !important;
+            text-decoration: line-through;
+        }
+    </style>
 </head>
 
 <body style="font-family: 'Open Sans', serif">
@@ -12,7 +24,11 @@
     <?php require "app/views/partials/navbar.php"; ?> <!-- NAVBAR -->
 
     <main class="container mb-3" style="margin-top: 150px;">
-        <div class="container mt-5">
+        <a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $infoAlojamiento['id'] ?>" class="btn btn-dark" onclick="window.history.back();">
+            ← Regresar
+        </a>
+
+        <div class="container mt-1">
             <section class="container my-3">
                 <div class="row">
                     <!-- Columna: Detalles del alojamiento -->
@@ -33,7 +49,7 @@
                                     <h5 class="card-title"><?= $infoAlojamiento['nombre'] ?></h5>
 
                                     <p class="card-text mb-1">
-                                        <strong>Dirección:</strong> <?= $infoAlojamiento['direccion'] ?>, <?= $infoAlojamiento['departamento'] ?>
+                                        <strong>Dirección:</strong> <?= $infoAlojamiento['direccion'] ?>
                                     </p>
 
                                     <p class="card-text mb-1">
@@ -69,9 +85,12 @@
                                     </p>
                                 </div>
 
-                                <form action="/reservaciones/crear" method="POST" class="row g-3">
+                                <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion" method="POST" class="row g-3">
                                     <!-- ID del alojamiento -->
                                     <input type="hidden" name="id_alojamiento" value="<?= htmlspecialchars($infoAlojamiento['id']) ?>">
+
+                                    <!-- ID del anfitrion -->
+                                    <input type="hidden" name="id_anfitrion" value="<?= htmlspecialchars($infoAlojamiento['id_anfitrion']) ?>">
 
                                     <!-- Número de huéspedes -->
                                     <div class="col-md-6">
@@ -109,7 +128,7 @@
 
                                     <!-- Botón de envío -->
                                     <div class="col-12">
-                                        <button type="button" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmReservation">Reservar</button>
+                                        <button type="button" id="btn-reservar" class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#confirmReservation" disabled>Reservar</button>
                                     </div>
 
                                     <!--Modal con los detalles y confirmacion de reservacion-->
@@ -130,7 +149,7 @@
                                                     <div id="resumenReservacion"></div>
 
                                                     <button type="submit" class="btn btn-primary mt-2">Confirmar</button>
-                                                    <button class="btn btn-danger mt-2" data-bs-dismiss="modal">Cancelar</button>
+                                                    <button type="button" class="btn btn-danger mt-2" data-bs-dismiss="modal">Cancelar</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -144,32 +163,69 @@
         </div>
     </main>
 
+    <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
+
+    <!-- BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Operacionamiento con JS para otener el resumen de la reservacion -->
     <script>
-        // Variables con la informacion a obtener
+        // Variables con la información del formulario
+        const btnReservar = document.getElementById('btn-reservar');
         const confirmationModal = document.querySelector('[data-bs-target="#confirmReservation"]');
         const fechaEntrada = document.getElementById('fecha_entrada');
         const fechaSalida = document.getElementById('fecha_salida');
         const cantHuespedes = document.getElementById('huespedes');
         const metodoPagoSelect = document.getElementById('metodo_pago');
 
-        // Event Listener para obtener la informacion deseada
+        // Crea un Date local para YYYY-MM-DD para el manejo de fechas
+        function parseLocalDate(yyyyMmDd) {
+            const [y, m, d] = yyyyMmDd.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        // Valida que TODOS los campos estén completos y las fechas sean correctas
+        function validarCampos() {
+            const entradaValida = fechaEntrada.value !== '';
+            const salidaValida = fechaSalida.value !== '';
+            const huespedesValidos = cantHuespedes.value !== '';
+            const metodoPagoValido = metodoPagoSelect.value !== '';
+
+            // Validación de fechas
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            const fechaEntradaDate = parseLocalDate(fechaEntrada.value);
+            const fechaSalidaDate = parseLocalDate(fechaSalida.value);
+            const entradaNoPasada = fechaEntradaDate >= hoy;
+            const fechasCorrectas = fechaSalidaDate >= fechaEntradaDate;
+
+            btnReservar.disabled = !(
+                entradaValida && salidaValida && huespedesValidos && metodoPagoValido && entradaNoPasada && fechasCorrectas
+            );
+        }
+
+        // Asigna listeners a TODOS los inputs relevantes
+        fechaEntrada.addEventListener('input', validarCampos);
+        fechaSalida.addEventListener('input', validarCampos);
+        cantHuespedes.addEventListener('change', validarCampos);
+        metodoPagoSelect.addEventListener('change', validarCampos);
+
+        // Construccion del resumen con fechas ya parseadas localmente
         confirmationModal.addEventListener('click', function() {
-            const entrada = new Date(fechaEntrada.value);
-            const salida = new Date(fechaSalida.value);
-            const huespedes = parseInt(cantHuespedes.value);
+            const entrada = parseLocalDate(fechaEntrada.value);
+            const salida = parseLocalDate(fechaSalida.value);
+            const huespedes = parseInt(cantHuespedes.value, 10);
             const metodoPago = metodoPagoSelect.value;
 
-            // Validacion para que la fecha de entrada no sea mayor a la de salida
-            if (!entrada || !salida || entrada >= salida) {
-                alert("Por favor seleccione fechas válidas.");
-                return;
-            }   
+            let dias = (salida - entrada) / (1000 * 60 * 60 * 24);
+            let precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
+            let total = dias * precioNoche;
 
-            // Calculo de los dias de estadia, total por persona y monto total a pagar
-            const dias = (salida - entrada) / (1000 * 60 * 60 * 24);
-            const precioPorPersonaPorDia = <?= $infoAlojamiento['precio'] ?>;
-            const total = dias * huespedes * precioPorPersonaPorDia;
+            if (dias <= 1) {
+                dias = 1;
+                precioNoche = parseFloat(<?= $infoAlojamiento['precio'] ?>);
+                total = dias * precioNoche;
+            }
 
             const resumenHTML = `
             <ul class="list-group">
@@ -180,16 +236,53 @@
                 <li class="list-group-item"><strong>Método de pago:</strong> ${metodoPago.charAt(0).toUpperCase() + metodoPago.slice(1)}</li>
                 <li class="list-group-item"><strong>Total a pagar:</strong> $${total.toFixed(2)}</li>
             </ul>
+            <input type="hidden" name="total_pago" value="${total.toFixed(2)}">
         `;
-
             document.getElementById('resumenReservacion').innerHTML = resumenHTML;
         });
     </script>
 
-    <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
+    <!-- Formato de fecha para inputs DATE y verificar las fechas con reservaciones en cada alojamiento -->
+    <script>
+        const reservedRanges = <?= json_encode($reservedRanges, JSON_UNESCAPED_SLASHES) ?>;
 
-    <!-- BOOTSTRAP JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        // Función para verificar si una fecha está dentro de algún rango
+        function isInReservedRange(date) {
+            return reservedRanges.some(range => {
+                const from = new Date(range.from);
+                const to = new Date(range.to);
+                return date >= from && date <= to;
+            });
+        }
+
+        flatpickr("#fecha_entrada", {
+            dateFormat: "Y-m-d",
+            disable: reservedRanges,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const date = new Date(dayElem.dateObj);
+                if (isInReservedRange(date)) {
+                    dayElem.classList.add("reserved-day");
+                }
+            },
+            onChange(selectedDates, dateStr, instance) {
+                salidaPicker.set('minDate', dateStr);
+            }
+        });
+
+        const salidaPicker = flatpickr("#fecha_salida", {
+            dateFormat: "Y-m-d",
+            disable: reservedRanges,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                const date = new Date(dayElem.dateObj);
+                if (isInReservedRange(date)) {
+                    dayElem.classList.add("reserved-day");
+                }
+            },
+            onReady: function(selectedDates, dateStr, instance) {
+                instance.set('minDate', document.querySelector('#fecha_entrada').value || 'today');
+            }
+        });
+    </script>
 
     <!-- Manejo de alertas -->
     <?php if (isset($_GET['alert'])): ?>
@@ -206,7 +299,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion?alojamiento=<?= $infoAlojamiento['id']; ?>";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -216,7 +309,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/getAlojamiento?id=<?= $alojamiento['id']; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/crear_reservacion?alojamiento=<?= $infoAlojamiento['id']; ?>";
                 });
             }
         </script>
