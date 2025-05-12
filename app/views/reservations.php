@@ -18,25 +18,17 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-3">ID</div>
-                                <div class="col-5">Alojamiento</div>
-                                <div class="col-4">Fecha de reservación</div>
-                            </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-id-user" class="form-label col-4">ID</label>
+                            <input type="number" id="filtro-id-user" placeholder="ID" class="form-control col-8">
                         </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-3">
-                                    <input type="number" id="filtro-id-user" class="form-control">
-                                </div>
-                                <div class="col-5">
-                                    <input type="text" id="filtro-nombre-user" class="form-control">
-                                </div>
-                                <div class="col-4">
-                                    <input type="date" id="filtro-fecha-reservacion-user" class="form-control">
-                                </div>
-                            </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-nombre-user" class="form-label col-4">Alojamiento</label>
+                            <input type="text" id="filtro-nombre-user" placeholder="Nombre" class="form-control col-8">
+                        </div>
+                        <div class="col-lg-4 col-md-12 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-fecha-reservacion-user" class="form-label col-6">Fecha reservacion</label>
+                            <input type="date" id="filtro-fecha-reservacion-user" class="form-control col-6">
                         </div>
                     </div>
                 </div>
@@ -93,6 +85,9 @@
                     <?php endif; ?>
                 </tbody>
             </table>
+            <p id="no-match-user" class="text-center mt-3 text-muted" style="display: none;">
+                No se han encontrado resultados.
+            </p>
 
             <!-- Reservaciones mostrados al ADMINISTRADOR y EMPLEADOS -->
 
@@ -101,33 +96,30 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-2">ID</div>
-                                <div class="col-2">Fecha de reservación</div>
-                                <div class="col-4">Alojamiento</div>
-                                <div class="col-2">Entrada</div>
-                                <div class="col-2">Salida</div>
-                            </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-id-admin" class="form-label col-4">ID</label>
+                            <input type="number" id="filtro-id-admin" placeholder="ID" class="form-control col-8">
                         </div>
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-2">
-                                    <input type="number" id="filtro-id-admin" placeholder="Número de ID" class="form-control">
-                                </div>
-                                <div class="col-2">
-                                    <input type="date" id="filtro-fecha-reservacion-admin" class="form-control">
-                                </div>
-                                <div class="col-4">
-                                    <input type="text" id="filter-nombre-admin" placeholder="Nombre del alojamiento" class="form-control">
-                                </div>
-                                <div class="col-2">
-                                    <input type="date" id="filtro-entrada-admin" class="form-control">
-                                </div>
-                                <div class="col-2">
-                                    <input type="date" id="filtro-salida-admin" class="form-control">
-                                </div>
-                            </div>
+
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-fecha-reservacion-admin" class="form-label col-8">Fecha reservación</label>
+                            <input type="date" id="filtro-fecha-reservacion-admin" class="form-control col-4">
+                        </div>
+
+                        <div class="col-lg-3 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-nombre-admin" class="form-label col-6">Alojamiento</label>
+                            <input type="text" id="filtro-nombre-admin" placeholder="Nombre" class="form-control col-6">
+                        </div>
+
+                        <div class="col-lg-2 col-md-6 col-sm-12 mb-2 align-items-center">
+                            <label for="filtro-entrada-admin" class="form-label col-6">Entrada</label>
+                            <input type="date" id="filtro-entrada-admin" class="form-control col-6">
+                        </div>
+
+                        <div class="col-lg-2 col-md-12 col-sm126 mb-2 align-items-center">
+                            <label for="filtro-salida-admin" class="form-label col-6">Salida</label>
+                            <input type="date" id="filtro-salida-admin" class="form-control col-6">
+
                         </div>
                     </div>
                 </div>
@@ -184,6 +176,9 @@
                         <?php endif; ?>
                     </tbody>
                 </table>
+                <p id="no-match-admin" class="text-center mt-3 text-muted" style="display: none;">
+                    No se han encontrado resultados.
+                </p>
             </div>
         <?php endif; ?>
     </main>

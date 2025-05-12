@@ -1,42 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const filasAdmin = document.querySelectorAll('.reserva-admin-row');
+    const filas = document.querySelectorAll('.reserva-admin-row');
 
-    const filtroId = document.getElementById('filtro-id-admin');
-    const filtroFechaReservacion = document.getElementById('filtro-fecha-reservacion-admin');
-    const filtroNombre = document.getElementById('filter-nombre-admin');
-    const filtroEntrada = document.getElementById('filtro-entrada-admin');
-    const filtroSalida = document.getElementById('filtro-salida-admin');
+    const filtros = {
+        id: document.getElementById('filtro-id-admin'),
+        nombre: document.getElementById('filtro-nombre-admin'),
+        fechaReservacion: document.getElementById('filtro-fecha-reservacion-admin'),
+        entrada: document.getElementById('filtro-entrada-admin'),
+        salida: document.getElementById('filtro-salida-admin'),
+    };
 
-    if (filtroId && filtroFechaReservacion && filtroNombre && filtroEntrada && filtroSalida) {
-        const aplicarFiltroAdmin = () => {
-            const valorId = filtroId.value.trim().toLowerCase();
-            const valorFechaReservacion = filtroFechaReservacion.value.trim();
-            const valorNombre = filtroNombre.value.trim().toLowerCase();
-            const valorEntrada = filtroEntrada.value.trim();
-            const valorSalida = filtroSalida.value.trim();
+    const aplicarFiltro = () => {
+        let resultsAdmin = false;
+        
+        filas.forEach(fila => {
+            const coincide =
+                (filtros.id.value === '' || fila.dataset.id.includes(filtros.id.value)) &&
+                (filtros.nombre.value === '' || fila.dataset.nombre.includes(filtros.nombre.value.toLowerCase())) &&
+                (filtros.fechaReservacion.value === '' || fila.dataset.fechaReservacion === filtros.fechaReservacion.value) &&
+                (filtros.entrada.value === '' || fila.dataset.entrada === filtros.entrada.value) &&
+                (filtros.salida.value === '' || fila.dataset.salida === filtros.salida.value);
 
-            filasAdmin.forEach(fila => {
-                const dataId = fila.dataset.id.toLowerCase();
-                const dataFechaReservacion = fila.dataset.fechaReservacion;
-                const dataNombre = fila.dataset.nombre.toLowerCase();
-                const dataEntrada = fila.dataset.entrada;
-                const dataSalida = fila.dataset.salida;
-
-                const coincide =
-                    (valorId === '' || dataId.includes(valorId)) &&
-                    (valorFechaReservacion === '' || dataFechaReservacion === valorFechaReservacion) &&
-                    (valorNombre === '' || dataNombre.includes(valorNombre)) &&
-                    (valorEntrada === '' || dataEntrada === valorEntrada) &&
-                    (valorSalida === '' || dataSalida === valorSalida);
-
-                fila.style.display = coincide ? '' : 'none';
-            });
-        };
-
-        filtroId.addEventListener('input', aplicarFiltroAdmin);
-        filtroFechaReservacion.addEventListener('input', aplicarFiltroAdmin);
-        filtroNombre.addEventListener('input', aplicarFiltroAdmin);
-        filtroEntrada.addEventListener('input', aplicarFiltroAdmin);
-        filtroSalida.addEventListener('input', aplicarFiltroAdmin);
-    }
+            if (coincide) {
+                fila.style.display = '';
+                resultsAdmin = true;
+            }
+            else {
+                fila.style.display = 'none';
+            }
+        });
+        document.getElementById('no-match-admin').style.display = resultsAdmin ? 'none' : 'block';
+    };
+    Object.values(filtros).forEach(input => {
+        input.addEventListener('input', aplicarFiltro);
+    });
 });
