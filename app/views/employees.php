@@ -27,7 +27,7 @@
                 <div class="btn-group" role="group" aria-label="Opciones de alojamiento">
                     <input type="radio" class="btn-check" name="tipo_alojamiento" id="disponibles" autocomplete="off" checked onclick="showContent('empleados-disponibles')">
                     <label class="btn btn-outline-success" for="disponibles" id="label_disponibles">Activos</label>
-                    
+
                 </div>
             </div>
         </section>
@@ -38,33 +38,31 @@
             <div id="empleados-disponibles" class="show-content">
                 <h2 class="text-center pb-2">Empleados Disponibles</h2>
 
-                <?php 
-                if (!empty($usuarios)) :
-                    $alojamiento_disponible = false; ?>
-
-                    <?php foreach ($usuarios as $usuario): ?>
-                        <?php if ($usuario['rol'] == 'empleado') {
-                            $alojamiento_disponible = true; ?>
-                            <div class="card mb-2 shadow-sm p-2 d-flex flex-row align-items-center gap-3">
-                                <i class="fa-solid fa-user fs-5 me-2"></i>
-
-                                <div class="flex-grow-1">
-                                    <div class="fw-bold mb-1"><?= htmlspecialchars($usuario['id']); ?> - <?= htmlspecialchars($usuario['nombre']); ?></div>
-                                </div>
-
-                                <div class="me-3">
-                                    <a href="/<?= $_SESSION['rootFolder'] ?>/Usuario/getUsuario?id=<?= $usuario['id']; ?>" class="btn btn-sm btn-primary">Ver</a>
-                                </div>
-                            </div>
-                        <?php } ?>
-                    <?php endforeach; ?>
-
-                    <?php if (!$alojamiento_disponible): ?>
-                        <p class="mt-3 text-center text-muted alert alert-warning">
-                            <strong>No hay empleados disponibles por el momento.</strong>
-                        </p>
-                    <?php endif; ?>
-
+                <?php if (!empty($empleados)) : ?>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($empleados as $empleado): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($empleado['id']); ?></td>
+                                        <td class="text-capitalize"><?= htmlspecialchars($empleado['nombre']); ?> <?= htmlspecialchars($empleado['apellido']); ?></td>
+                                        <td>
+                                            <a href="/<?= $_SESSION['rootFolder'] ?>/Usuario/getUsuario?id=<?= $empleado['id']; ?>" class="btn btn-sm btn-primary">
+                                                Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
                 <?php else: ?>
                     <p class="mt-3 text-center text-muted alert alert-warning">
                         <strong>No se encontraron empleados disponibles.</strong>
@@ -75,10 +73,6 @@
 
     </main>
     <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
-
-   
-
-   
 
     <!--BOOTSTRAP JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

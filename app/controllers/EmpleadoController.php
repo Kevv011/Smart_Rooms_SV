@@ -1,22 +1,22 @@
 <?php
-require_once "app/models/AlojamientoModel.php";
-require_once "app/models/UserModel.php";
+require_once "app/models/EmployeeModel.php";
 
-class UsuarioController 
+class EmpleadoController
 {
-    // Metodo para ver Todos los Usuarios (Permisos de administrador)
-    public function usuarios()
+    // Metodo para ver Todos los empleados (Permisos de administrador)
+    public function empleados()
     {
-        $model2 = new UserModel();
-        $usuarios = $model2->readEmpleado1();
+        $empleado = new EmployeeModel();
+        $empleados = $empleado->readEmpleados('empleado');
         require_once 'app/views/employees.php';
     }
+
     public function getUsuario()
     {
         if (isset($_GET['id'])) {
             $id = $_GET['id'];
 
-            $usuarioModel = new UserModel(); 
+            $usuarioModel = new EmployeeModel();
             $usuario = $usuarioModel->UsuarioEmpleadoById($id);
 
             if (!$usuario) {
@@ -35,7 +35,7 @@ class UsuarioController
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
 
             // Instancia del modelo
-            $usu = new UserModel();
+            $usu = new EmployeeModel();
 
             // Datos del formulario
             $idUsuario = $_POST['id'];
@@ -48,14 +48,13 @@ class UsuarioController
 
             $resultado = $usu->editUsuario($idUsuario, $nombre, $apellido, $correo, $rol);
 
-                if ($resultado) {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$idUsuario&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
-                    return;
-                } else {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$usuario_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
-                    return;
-                }
-
+            if ($resultado) {
+                header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$idUsuario&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
+                return;
+            } else {
+                header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$usuario_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
+                return;
+            }
         } else {
             echo "Acceso no permitido.";
         }
