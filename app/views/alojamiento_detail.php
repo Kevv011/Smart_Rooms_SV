@@ -85,10 +85,16 @@
                                 <!--Botones para USUARIOS-->
                             <?php }
                         } else { ?>
-                            <button type="button" class="btn btn-danger text-white" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
-                            <button class="btn w-100 mt-3 text-white" data-bs-toggle="modal" data-bs-target="#login" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
-                                Reservar
-                            </button>
+                            <button type="button" class="btn btn-danger text-white mt-2" data-bs-toggle="modal" data-bs-target="#modalFavorito"> <i class="fa-solid fa-heart"></i> Agregar a favorito</button>
+
+                            <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/reservacion_alojamiento" method="POST">
+
+                                <!-- Input HIDDEN para enviar ID del alojamiento a la reservacion -->
+                                <input type="hidden" name="id_alojamiento" value="<?= $alojamiento['id'] ?>">
+                                <button type="submit" class="btn w-100 mt-3 text-white" style="background: linear-gradient(to right,rgb(56, 109, 255),rgb(0, 218, 247)); border: none;">
+                                    Reservar
+                                </button>
+                            </form>
                     <?php }
                     } ?>
                 </div>
@@ -176,7 +182,7 @@
                     <label for="precio" class="form-label">Precio por noche</label>
                     <div class="input-group">
                         <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" required>
+                        <input type="number" class="form-control" id="precio" name="precio" value="<?= htmlspecialchars($alojamiento['precio']); ?>" min="1" step="0.01" required>
                     </div>
                 </div>
 
@@ -218,10 +224,10 @@
                 <div class="col-md-2 text-center">
                     <label class="form-label d-block">¿Acepta mascotas?</label>
                     <div class="btn-group" role="group" aria-label="Mascotas">
-                        <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" autocomplete="off">
+                        <input type="radio" class="btn-check" name="mascota" value="1" id="afirmar" checked autocomplete="off">
                         <label class="btn btn-outline-success" for="afirmar">Sí</label>
 
-                        <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" checked autocomplete="off">
+                        <input type="radio" class="btn-check" name="mascota" value="0" id="denegar" autocomplete="off">
                         <label class="btn btn-outline-danger" for="denegar">No</label>
                     </div>
                 </div>
@@ -331,13 +337,10 @@
                 <div class="modal-body text-center">
                     <p class="mb-3">¿Agregar alojamiento como favorito?</p>
 
-                    <form action="/Alojamientos_app_PHP/Useralojamiento/add_favorito/" method="POST">
+                    <form action="/<?= $_SESSION['rootFolder'] ?>/Alojamiento_favorito/favoritos/" method="POST">
 
                         <!-- id_alojamiento -->
                         <input type="text" name="id_alojamiento" value="<?= htmlspecialchars($alojamiento['id']); ?>" hidden>
-
-                        <!-- id_usuario -->
-                        <input type="text" name="id_usuario" value="<?= $_SESSION['usuario_id']; ?>" hidden>
 
                         <!-- Botones -->
                         <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Agregar</button>

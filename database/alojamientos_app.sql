@@ -59,7 +59,7 @@ CREATE TABLE `anfitriones` (
 --
 
 INSERT INTO `anfitriones` (`id`,`id_usuario`,`biografia`) VALUES 
-(1, 2, 'anfitrión dueño de diversos ranchos en el area de la libertad');
+(1, 2, 'anfitrión dueño de diversos ranchos en diversas areas de el salvador');
 
 -- ----------------------------------------------------------------------------------------
 
@@ -145,13 +145,13 @@ CREATE TABLE `clientes_alojamientos` (
   FOREIGN KEY (`id_alojamiento`) REFERENCES `alojamientos` (`id`) ON DELETE CASCADE, -- FK con tabla `alojamientos`
   KEY `alojamiento_id` (`id_alojamiento`)											 -- Index para la optimizacion en operaciones
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
+SELECT * FROM clientes_alojamientos;
 -- --------------------------------------------------------
 
 --
 -- Tabla de reservaciones
 -- 
-
+SELECT * FROM reservaciones;
 CREATE TABLE `reservaciones` (
 	`id` int(10) NOT NULL PRIMARY KEY AUTO_INCREMENT,	-- ID de reservaciones
     `id_usuario` int(10) NOT NULL,						-- Campo ID usuario para FK
@@ -160,6 +160,7 @@ CREATE TABLE `reservaciones` (
 	`huéspedes` INT(10) NOT NULL,						-- Numero de huespedes en la reservacion
     `fecha_entrada` DATE NOT NULL,						-- Fecha de llegada al alojamiento
     `fecha_salida` DATE NOT NULL,						-- Fecha de salida del alojamiento
+    `fecha_salida_real` DATE NULL,						-- Fecha de salida del alojamiento real
     `metodo_pago` VARCHAR(50) NOT NULL,					-- Metodo de pago a usar
     `total_pago` DECIMAL(10,2) NOT NULL,				-- Total de pago calculado segun los dias a quedarse
     `estado` ENUM('pendiente','confirmada','cancelada','completada'), 	-- Estado de una reservacion
@@ -176,58 +177,18 @@ CREATE TABLE `reservaciones` (
 
 -- ----------------------------------------------------------------------------------------
 
+CREATE TABLE `comentario_reservacion` (
+    `id` INT(10) PRIMARY KEY AUTO_INCREMENT,
+    `id_reservacion` INT(10) NOT NULL,
+    `id_usuario` INT(10),
+    `estado_asignado` ENUM('pendiente','confirmada','cancelada','completada') NULL,
+    `comentario` TEXT NULL,
+    `fecha_comentario` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`id_reservacion`) REFERENCES `reservaciones`(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`) ON DELETE SET NULL
+);
+SELECT * FROM comentario_reservacion;
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
--- JOIN para obtener un anfitrion por alojamiento
-SELECT 
-    u.id AS usuario_id,
-    u.nombre AS nombre_usuario,
-    u.apellido,
-    u.telefono,
-    u.correo,
-    u.rol,
-    u.estado,
-    u.fecha_registro AS usuario_registro,
-
-    a.id AS anfitrion_id,
-    a.biografia,
-    a.actualizado_en AS anfitrion_actualizado,
-
-    al.id AS alojamiento_id,
-    al.nombre AS nombre_alojamiento,
-    al.descripcion,
-    al.direccion,
-    al.precio,
-    al.imagen,
-    al.minpersona,
-    al.maxpersona,
-    al.mascota,
-    al.departamento,
-    al.eliminado,
-    al.fecha_registro AS alojamiento_registro,
-    al.actualizado_en AS alojamiento_actualizado
-
-FROM alojamientos al
-JOIN anfitriones a ON al.id_anfitrion = a.id
-JOIN usuarios u ON a.id_usuario = u.id
-WHERE al.id = 1;
-
-
-SELECT 
-            u.id AS id_usuario,
-            u.nombre,
-            u.apellido,
-            u.telefono,
-            u.correo,
-            u.rol,
-            u.estado,
-            u.fecha_registro AS usuario_registro,
-
-            e.id AS id_empleado,
-            e.cargo,
-            e.actualizado_en
-        FROM usuarios u
-        INNER JOIN empleados e ON e.id_usuario = u.id
-        WHERE u.id = 3

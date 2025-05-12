@@ -1,6 +1,6 @@
 <?php
 require_once "app/models/AlojamientoModel.php";
-require_once "app/models/UserModel.php";
+require_once "app/models/AnfitrionModel.php";
 
 class AlojamientoController
 {
@@ -12,17 +12,17 @@ class AlojamientoController
 
             //Obtencion de los datos a partir del modelo
             $alojamientoModel = new AlojamientoModel(); // Modelo para la informacion del alojamiento
-            $userModel = new UserModel();               // Modelo para la informacion del anfitrion
+            $anfitrionModel = new AnfitrionModel();               // Modelo para la informacion del anfitrion
             $alojamiento = $alojamientoModel->getAlojamientoByID($id);
-            $userAnfitrion = $userModel->anfitrionByAlojamientoID($id);
+            $userAnfitrion = $anfitrionModel->anfitrionByAlojamientoID($id);
 
             if (!$alojamiento || !$userAnfitrion) {
                 echo "El alojamiento no existe.";
                 return;
             }
 
-            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion en caso de un update
-            $anfitriones = $userModel->getAnfitriones();
+            // Obteniendo la informacion del anfitrion en caso de un update
+            $anfitriones = $anfitrionModel->getAnfitriones();
 
             require_once 'app/views/alojamiento_detail.php';
         } else {
@@ -90,8 +90,8 @@ class AlojamientoController
                 exit();
             }
         } else {
-            $userModel = new UserModel();                    // Modelo para la informacion del anfitrion
-            $anfitriones = $userModel->getAnfitriones();
+            $anfitrionModel = new anfitrionModel();                    // Modelo para la informacion del anfitrion
+            $anfitriones = $anfitrionModel->getAnfitriones();
 
             require_once 'app/views/create_alojamiento.php'; // Acceso al formulario de crear un alojamiento con la solicitud reconocida (GET)
         }
@@ -227,12 +227,30 @@ class AlojamientoController
                     header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$idAlojamiento&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
                     return;
                 } else {
-                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
+                    header("Location: /" . $_SESSION['rootFolder'] . "/Alojamiento/getAlojamiento?id=$alojamiento_id/Alojamiento/getAlojamiento?id=$alojamiento_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
                     return;
                 }
             }
         } else {
             echo "Acceso no permitido.";
+        }
+    }
+
+    // Metodo para enviar informacion del alojamiento al formulario de reservacion
+    public function reservacion_alojamiento()
+    {
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            if (isset($_POST['id_alojamiento'])) {
+                $id_alojamiento = $_POST['id_alojamiento'];
+
+                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/crear_reservacion?alojamiento=$id_alojamiento");
+                exit;
+            } else {
+                header("Location: /" . $_SESSION['rootFolder'] . "/Home/index&alert=error&message=" . urlencode("Este alojamiento no existe o fue eliminado"));
+                return;
+            }
         }
     }
 }
