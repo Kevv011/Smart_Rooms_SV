@@ -195,65 +195,69 @@
                 </div>
             </section>
 
-            <?php if ($reservacionById['estado'] === 'completada'): ?>
+            <?php if ($_SESSION['user_role'] !== 'administrador' && $_SESSION['user_role'] !== 'empleado'): ?>
+                <?php if ($reservacionById['estado'] === 'completada'): ?>
 
-                <!-- Muestra del comentario y puntuacion con estrellas al haberse realizado -->
-                <?php if (!is_null($reservacionById['calificacion_usuario'])): ?>
+                    <!-- Muestra del comentario y puntuacion con estrellas al haberse realizado -->
+                    <?php if (!is_null($reservacionById['calificacion_usuario'])): ?>
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h4 class="card-title mb-4">Tu experiencia calificada</h4>
-                            <hr>
-                            <div class="row align-items-center">
-                                <!-- Columna de calificación -->
-                                <div class="col-12 col-md-4 d-flex align-items-center mb-3 mb-md-0">
-                                    <span class="fw-semibold me-2">Calificación:</span>
-                                    <div class="d-flex gap-1">
-                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <span class="star" style="font-size: 1.5rem; color: <?= $i <= $reservacionById['calificacion_usuario'] ? '#ffc107' : '#e4e5e9' ?>">&#9733;</span>
-                                        <?php endfor; ?>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Tu experiencia calificada</h4>
+                                <hr>
+                                <div class="row align-items-center">
+                                    <!-- Columna de calificación -->
+                                    <div class="col-12 col-md-4 d-flex align-items-center mb-3 mb-md-0">
+                                        <span class="fw-semibold me-2">Calificación:</span>
+                                        <div class="d-flex gap-1">
+                                            <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                <span class="star" style="font-size: 1.5rem; color: <?= $i <= $reservacionById['calificacion_usuario'] ? '#ffc107' : '#e4e5e9' ?>">&#9733;</span>
+                                            <?php endfor; ?>
+                                        </div>
+                                    </div>
+
+                                    <!-- Columna de comentario -->
+                                    <div class="col-12 col-md-8">
+                                        <span class="fw-semibold">Comentario:</span>
+                                        <?php if (!empty($reservacionById['comentario_usuario'])): ?>
+                                            <p class="mb-0"><?= nl2br(htmlspecialchars($reservacionById['comentario_usuario'])) ?></p>
+                                        <?php else: ?>
+                                            <p class="mb-0">Sin comentarios</p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <!-- Columna de comentario -->
-                                <div class="col-12 col-md-8">
-                                    <span class="fw-semibold">Comentario:</span>
-                                    <?php if (!empty($reservacionById['comentario_usuario'])): ?>
-                                        <p class="mb-0"><?= nl2br(htmlspecialchars($reservacionById['comentario_usuario'])) ?></p>
-                                    <?php else: ?>
-                                        <p class="mb-0">Sin comentarios</p>
-                                    <?php endif; ?>
+                        <!-- Form para detallar un comentario y puntuacion con estrellas si la reservacion ha sido completada -->
+                    <?php else: ?>
+                        <h1>¡Califica tu experiencia!</h1>
+
+                        <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/calificacionUsuario" method="POST">
+                            <input type="hidden" name="id_reservacion" value="<?= $reservacionById['id'] ?>">
+                            <input type="hidden" name="id_alojamiento" value="<?= $alojamientoById['id'] ?>">
+
+                            <div class="mb-3">
+                                <label for="calificacion" class="form-label">Tu calificación:</label>
+                                <div id="rating-stars" class="d-flex justify-content-start gap-1">
+                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                        <input type="radio" name="calificacion" id="estrella<?= $i ?>" value="<?= $i ?>" required />
+                                        <label for="estrella<?= $i ?>" class="star" style="font-size: 2rem;">&#9733;</label>
+                                    <?php endfor; ?>
                                 </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <!-- Form para detallar un comentario y puntuacion con estrellas si la reservacion ha sido completada -->
-                <?php else: ?>
-                    <h1>¡Califica tu experiencia!</h1>
-
-                    <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/calificacionUsuario" method="POST">
-                        <input type="hidden" name="id_reservacion" value="<?= $reservacionById['id'] ?>">
-                        <input type="hidden" name="id_alojamiento" value="<?= $alojamientoById['id'] ?>">
-
-                        <div class="mb-3">
-                            <label for="calificacion" class="form-label">Tu calificación:</label>
-                            <div id="rating-stars" class="d-flex justify-content-start gap-1">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <input type="radio" name="calificacion" id="estrella<?= $i ?>" value="<?= $i ?>" required />
-                                    <label for="estrella<?= $i ?>" class="star" style="font-size: 2rem;">&#9733;</label>
-                                <?php endfor; ?>
+                            <div class="mb-3">
+                                <label for="comentario" class="form-label">Comentario (opcional):</label>
+                                <textarea name="comentario" id="comentario" class="form-control" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
                             </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="comentario" class="form-label">Comentario (opcional):</label>
-                            <textarea name="comentario" id="comentario" class="form-control" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
-                        </div>
-
-                        <button type="submit" class="btn btn-success">Enviar comentario</button>
-                    </form>
+                            <button type="submit" class="btn btn-success">Enviar comentario</button>
+                        </form>
+                    <?php endif; ?>
                 <?php endif; ?>
+
+            <?php else: ?>
             <?php endif; ?>
         </div>
     </main>
