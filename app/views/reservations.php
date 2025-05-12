@@ -46,9 +46,9 @@
                     </tr>
                 </thead>
                 <tbody>
-
                     <?php if (!empty($reservaciones)): ?>
                         <?php foreach ($reservaciones as $reserva): ?>
+
                             <tr class="reserva-user-row"
                                 data-id="<?= htmlspecialchars($reserva['id']) ?>"
                                 data-nombre="<?= strtolower(htmlspecialchars($reserva['nombre_alojamiento'])) ?>"
@@ -77,6 +77,7 @@
                                     </form>
                                 </td>
                             </tr>
+
                         <?php endforeach; ?>
                     <?php else: ?>
                         <tr>
@@ -140,9 +141,9 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php if (!empty($reservacionesAdmin)): ?>
                             <?php foreach ($reservacionesAdmin as $reserva): ?>
+
                                 <tr class="reserva-admin-row"
                                     data-id="<?= htmlspecialchars($reserva['id']) ?>"
                                     data-fecha-reservacion="<?= date('Y-m-d', strtotime($reserva['fecha_reservacion'])) ?>"
@@ -168,6 +169,7 @@
                                         </form>
                                     </td>
                                 </tr>
+                            
                             <?php endforeach; ?>
                         <?php else: ?>
                             <tr>
@@ -202,7 +204,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -212,7 +214,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones";
                 });
             }
         </script>

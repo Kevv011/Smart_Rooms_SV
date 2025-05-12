@@ -50,7 +50,8 @@
             <div id="alojamientos-disponibles" class="show-content">
                 <h2 class="text-center pb-2">Alojamientos Disponibles</h2>
 
-                <?php if (!empty($alojamientos)) :
+                <?php 
+                if (!empty($alojamientos)) :
                     $alojamiento_disponible = false; ?>
 
                     <?php foreach ($alojamientos as $alojamiento): ?>

@@ -131,4 +131,17 @@ class AlojamientoModel
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+    // Metodo para comprobar si un alojamiento no esta eliminado
+    public function alojamientoDisponible($id_alojamiento)
+    {
+        $sql = "SELECT id FROM alojamientos 
+                WHERE id = :id AND eliminado = 0 
+                LIMIT 1";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':id', $id_alojamiento, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetch(PDO::FETCH_ASSOC) !== false;
+    }
 }

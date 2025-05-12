@@ -65,13 +65,16 @@
                                     <!-- OPCIONES PARA ADMINISTRADOR -->
                                     <?php if ($_SESSION['user_role'] == 'administrador') { ?>
                                         <li><a href="#" class="btn"><i class="fa-solid fa-user"></i> Usuarios</a></li>
+                                        
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos" class="btn"><i class="fa-solid fa-house-user"></i> Alojamientos</a></li>
-                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
+
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Empleado/empleados" class="btn"><i class="fa-solid fa-user"></i> Empleados</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones" class="btn"><i class="fa-solid fa-clipboard-list"></i> Reservaciones</a></li>
 
                                         <!-- OPCIONES PARA CLIENTES -->
                                     <?php } else { ?>
                                         <li><a href="/<?= $_SESSION['rootFolder'] ?>/Alojamiento_favorito/favoritos/" class="btn pe-5"><i class="fa-solid fa-heart text-danger"></i> Favoritos</a></li>
-                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/mis_reservaciones" class="btn"><i class="fa-solid fa-calendar-days"></i> Mis reservaciones</a></li>
+                                        <li><a href="/<?= $_SESSION['rootFolder'] ?>/Reservation/reservaciones" class="btn"><i class="fa-solid fa-calendar-days"></i> Mis reservaciones</a></li>
                                     <?php } ?>
                                 <?php } ?>
                             </ul>
