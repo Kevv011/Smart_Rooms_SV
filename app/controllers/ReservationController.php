@@ -157,7 +157,7 @@ class ReservationController
 
             $reservacion = new ReservationModel();
 
-            if($estado_reservacion === 'completada') {
+            if ($estado_reservacion === 'completada') {
                 $fecha_salida_real = $reservacion->updateFechaSalidaReal($id_reservacion, $fecha_salida_real);
             }
 
@@ -169,8 +169,36 @@ class ReservationController
 
             if ($estadoActualizado && $comentarioAgregado) {
                 header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/detalle_reservacion?alojamiento=$id_alojamiento&reservacion=$id_reservacion&alert=success&message=" . urlencode("Estado asignado a la reservación: $estado_reservacion"));
+                exit;
             } else {
                 header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/detalle_reservacion?alojamiento=$id_alojamiento&reservacion=$id_reservacion&alert=error&message=" . urlencode("Ocurrió un error al procesar la asignación de la reservación"));
+                exit;
+            }
+        }
+    }
+
+    // Metodo para que el usuario califique un alojamiento
+    public function calificacionUsuario()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $id_reservacion = $_POST['id_reservacion'];
+            $id_alojamiento = $_POST['id_alojamiento'];
+            $comentario = isset($_POST['comentario']) ? trim($_POST['comentario']) : '';
+            $calificacion = isset($_POST['calificacion']) ? intval($_POST['calificacion']) : 0;
+
+            // Validar datos básicos
+            if ($id_reservacion && $id_alojamiento && $calificacion >= 1 && $calificacion <= 5) {
+                $reservacion = new ReservationModel();
+                $reservacion->calificacionReservacionUser($id_reservacion, $comentario, $calificacion);
+
+                // Redirige sin incluir comentario en la URL
+                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/detalle_reservacion?alojamiento=$id_alojamiento&reservacion=$id_reservacion&alert=success&message=" . urlencode("Calificación enviada correctamente"));
+                exit;
+            } else {
+                // Calificación inválida o datos incompletos
+                header("Location: /" . $_SESSION['rootFolder'] . "/Reservation/detalle_reservacion?alojamiento=$id_alojamiento&reservacion=$id_reservacion&alert=error&message=" . urlencode("La puntuación debe estar entre 1 y 5"));
+                exit;
             }
         }
     }

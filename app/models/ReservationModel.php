@@ -252,4 +252,20 @@ class ReservationModel
 
         return $stmt->execute();
     }
+
+    // Metodo para que un usuario agregue calificacion y/o comentario una vez terminada su reservacion
+    public function calificacionReservacionUser($idReservacion, $comentario, $calificacion)
+    {
+        $sql = "UPDATE reservaciones 
+            SET comentario_usuario = :comentario, 
+                calificacion_usuario = :calificacion 
+            WHERE id = :id";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':comentario', $comentario, PDO::PARAM_STR);
+        $stmt->bindParam(':calificacion', $calificacion, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $idReservacion, PDO::PARAM_INT);
+
+        return $stmt->execute();
+    }
 }

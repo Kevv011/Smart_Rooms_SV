@@ -5,6 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle Reservación</title>
+
+    <style>
+        .star {
+            font-size: 3rem;
+            color: lightgray;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        #rating-stars label:hover,
+        #rating-stars input[type="radio"]:checked~label,
+        #rating-stars label:hover~label {
+            color: gold;
+        }
+
+        /* Al seleccionar, pintar todas las anteriores también */
+        #rating-stars input[type="radio"]:checked~label {
+            color: lightgray;
+        }
+
+        #rating-stars input[type="radio"]:checked+label,
+        #rating-stars input[type="radio"]:checked+label~label {
+            color: gold;
+        }
+
+        #rating-stars label:hover,
+        #rating-stars label:hover~label {
+            color: gold;
+        }
+    </style>
 </head>
 
 <body style="font-family: 'Open Sans', serif">
@@ -108,7 +142,7 @@
                                     <div class="col-md-6">
                                         <p><strong>Fecha de Salida: </strong><?= date("d/m/Y", strtotime($reservacionById['fecha_salida'])) ?></p>
                                         <?php if ($reservacionById['estado'] === 'completada'): ?>
-                                        <p><strong>Fecha de Salida (real): </strong><?= date("d/m/Y", strtotime($reservacionById['fecha_salida_real'])) ?></p>
+                                            <p><strong>Fecha de Salida (real): </strong><?= date("d/m/Y", strtotime($reservacionById['fecha_salida_real'])) ?></p>
                                         <?php endif; ?>
                                     </div>
 
@@ -160,6 +194,67 @@
                     </div>
                 </div>
             </section>
+
+            <?php if ($reservacionById['estado'] === 'completada'): ?>
+
+                <!-- Muestra del comentario y puntuacion con estrellas al haberse realizado -->
+                <?php if (!is_null($reservacionById['calificacion_usuario'])): ?>
+
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h4 class="card-title mb-4">Tu experiencia calificada</h4>
+                            <hr>
+                            <div class="row align-items-center">
+                                <!-- Columna de calificación -->
+                                <div class="col-12 col-md-4 d-flex align-items-center mb-3 mb-md-0">
+                                    <span class="fw-semibold me-2">Calificación:</span>
+                                    <div class="d-flex gap-1">
+                                        <?php for ($i = 1; $i <= 5; $i++): ?>
+                                            <span class="star" style="font-size: 1.5rem; color: <?= $i <= $reservacionById['calificacion_usuario'] ? '#ffc107' : '#e4e5e9' ?>">&#9733;</span>
+                                        <?php endfor; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Columna de comentario -->
+                                <div class="col-12 col-md-8">
+                                    <span class="fw-semibold">Comentario:</span>
+                                    <?php if (!empty($reservacionById['comentario_usuario'])): ?>
+                                        <p class="mb-0"><?= nl2br(htmlspecialchars($reservacionById['comentario_usuario'])) ?></p>
+                                    <?php else: ?>
+                                        <p class="mb-0">Sin comentarios</p>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Form para detallar un comentario y puntuacion con estrellas si la reservacion ha sido completada -->
+                <?php else: ?>
+                    <h1>¡Califica tu experiencia!</h1>
+
+                    <form action="/<?= $_SESSION['rootFolder'] ?>/Reservation/calificacionUsuario" method="POST">
+                        <input type="hidden" name="id_reservacion" value="<?= $reservacionById['id'] ?>">
+                        <input type="hidden" name="id_alojamiento" value="<?= $alojamientoById['id'] ?>">
+
+                        <div class="mb-3">
+                            <label for="calificacion" class="form-label">Tu calificación:</label>
+                            <div id="rating-stars" class="d-flex justify-content-start gap-1">
+                                <?php for ($i = 1; $i <= 5; $i++): ?>
+                                    <input type="radio" name="calificacion" id="estrella<?= $i ?>" value="<?= $i ?>" required />
+                                    <label for="estrella<?= $i ?>" class="star" style="font-size: 2rem;">&#9733;</label>
+                                <?php endfor; ?>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comentario" class="form-label">Comentario (opcional):</label>
+                            <textarea name="comentario" id="comentario" class="form-control" rows="3" placeholder="Cuéntanos tu experiencia..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Enviar comentario</button>
+                    </form>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
     </main>
 
@@ -282,7 +377,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/detalle_reservacion?alojamiento=<?= $alojamientoById['id']; ?>&reservacion=<?= $reservacionById['id'] ?>; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/detalle_reservacion?alojamiento=<?= $alojamientoById['id']; ?>&reservacion=<?= $reservacionById['id'] ?>?>";
                 });
             } else if (alertType === "error") {
                 Swal.fire({
@@ -292,7 +387,7 @@
                     confirmButtonText: 'Aceptar'
                 }).then(() => {
                     // Redirigir a la página principal o login después de cerrar la alerta
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/detalle_reservacion?alojamiento=<?= $alojamientoById['id']; ?>&reservacion=<?= $reservacionById['id'] ?>; ?>";
+                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Reservation/detalle_reservacion?alojamiento=<?= $alojamientoById['id']; ?>&reservacion=<?= $reservacionById['id'] ?>?>";
                 });
             }
         </script>
