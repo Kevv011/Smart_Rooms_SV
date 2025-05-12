@@ -11,48 +11,70 @@ class EmpleadoController
         require_once 'app/views/employees.php';
     }
 
-    public function getUsuario()
+    // Metodo para procesar la obtencion del ID del empleado y ver su informacion
+    public function post_detalle_empleado()
     {
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            $usuarioModel = new EmployeeModel();
-            $usuario = $usuarioModel->UsuarioEmpleadoById($id);
+            if (isset($_POST['id_usuario'])) {
 
-            if (!$usuario) {
-                echo "El usuario no existe.";
+                $id_empleado = $_POST['id_usuario'];
+
+                // Si se encontro un empleado, redirigir al detalle del empleado con su ID
+                header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/detalle_empleado?id=$id_empleado");
+                return;
+            } else {
+                header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/empleados&alert=error&message=" . urlencode("Ocurrio un error al obtener la información de este empleado."));
                 return;
             }
-
-            require_once 'app/views/employee_detail.php';
-        } else {
-            echo "ID no proporcionado.";
         }
     }
 
-    public function update()
+    // Metodo para ver la informacion de un empleado (Metodo post_detalle_empleado procesa la info principal)
+    public function detalle_empleado()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+        if (!isset($_GET['id'])) {
+            header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/empleados?alert=error&message=" . urlencode("Error al obtener la información de este empleado."));
+            exit;
+        }
 
-            // Instancia del modelo
-            $usu = new EmployeeModel();
+        $id_empleado = $_GET['id'];
+
+        $empleado = new EmployeeModel();
+        $empleadoById = $empleado->getEmpleadoByID($id_empleado);
+
+        if (!$empleadoById) {
+            header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/empleados?alert=error&message=" . urlencode("El empleado no existe o fue eliminado."));
+            exit;
+        }
+
+        require_once 'app/views/employee_detail.php';
+    }
+
+    public function update_empleado()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $empleado = new EmployeeModel();
 
             // Datos del formulario
-            $idUsuario = $_POST['id'];
+            $id_usuario = $_POST['id_usuario'];
             $nombre = trim($_POST['nombre']);
             $apellido = trim($_POST['apellido']);
+            $cod_telefono = trim($_POST['phone-code']);
+            $num_telefono = trim($_POST['phone']);
+            $telefono = $cod_telefono . ' ' . $num_telefono;
             $correo = trim($_POST['correo']);
             $rol = trim($_POST['rol']);
+            $cargo = $_POST['cargo'];
 
-            $usuario_id = $_GET['id']; // Obtener ID de alojamiento con GET para hacer redireccion efectiva
-
-            $resultado = $usu->editUsuario($idUsuario, $nombre, $apellido, $correo, $rol);
+            $resultado = $empleado->editUsuario($id_usuario, $nombre, $apellido, $telefono, $correo, $rol, $cargo);
 
             if ($resultado) {
-                header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$idUsuario&alert=success&message=" . urlencode("Alojamiento actualizado exitosamente"));
+                header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/detalle_empleado?id=$id_usuario&alert=success&message=" . urlencode("Información de empleado actualizada"));
                 return;
             } else {
-                header("Location: /" . $_SESSION['rootFolder'] . "/Usuario/getUsuario?id=$usuario_id&alert=error&message=" . urlencode("Hubo un error al guardar la imagen del alojamiento"));
+                header("Location: /" . $_SESSION['rootFolder'] . "/Empleado/detalle_empleado?id=$id_usuario&alert=error&message=" . urlencode("Error al actualizar la información del empleado. Intente nuevamente"));
                 return;
             }
         } else {

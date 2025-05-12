@@ -22,18 +22,8 @@ class EmployeeModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Metodo para ver un usuario especifico
-    public function getUserByID($id)
-    {
-        $query = "SELECT * FROM usuarios WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-
-    public function UsuarioEmpleadoById($idEmpleado)
+    // Metodo para ver un empleado especifico
+    public function getEmpleadoByID($idEmpleado)
     {
         $query = "
         SELECT 
@@ -60,30 +50,41 @@ class EmployeeModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function editUsuario(
-        $id,
-        $nombre,
-        $apellido,
-        $telefono,
-        $correo,
-        $rol
-    ) {
-        $query = "UPDATE usuarios 
-              SET 
-                  nombre = :nombre,
-                  apellido = :apellido,
-                  telefono = :telefono,
-                  precio = :precio,
-                  rol = :rol
-              WHERE id = :id";
+    // Metodo para actualizar informacion de un empleado
+    public function editUsuario($id, $nombre, $apellido, $telefono, $correo, $rol, $cargo)
+    {
+        $this->db->beginTransaction();
 
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-        $stmt->bindParam(":nombre", $nombre, PDO::PARAM_INT);
-        $stmt->bindParam(":apellido", $apellido);
-        $stmt->bindParam(":telefono", $telefono);
-        $stmt->bindParam(":correo", $correo);
-        $stmt->bindParam(":rol", $rol);
-        return $stmt->execute();
+        // Actualiza tabla usuarios
+        $queryUsuario = "UPDATE usuarios 
+                         SET nombre = :nombre,
+                             apellido = :apellido,
+                             telefono = :telefono,
+                             correo = :correo,
+                             rol = :rol
+                         WHERE id = :id";
+
+        $stmtUsuario = $this->db->prepare($queryUsuario);
+        $stmtUsuario->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmtUsuario->bindParam(":nombre", $nombre);
+        $stmtUsuario->bindParam(":apellido", $apellido);
+        $stmtUsuario->bindParam(":telefono", $telefono);
+        $stmtUsuario->bindParam(":correo", $correo);
+        $stmtUsuario->bindParam(":rol", $rol);
+        $stmtUsuario->execute();
+
+        // Actualiza tabla empleados
+        $queryEmpleado = "UPDATE empleados 
+                          SET cargo = :cargo 
+                          WHERE id_usuario = :id_usuario";
+
+        $stmtEmpleado = $this->db->prepare($queryEmpleado);
+        $stmtEmpleado->bindParam(":cargo", $cargo);
+        $stmtEmpleado->bindParam(":id_usuario", $id, PDO::PARAM_INT);
+        $stmtEmpleado->execute();
+
+        // Confirmar cambios
+        $this->db->commit();
+        return true;
     }
 }

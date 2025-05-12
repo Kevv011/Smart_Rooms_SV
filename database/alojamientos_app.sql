@@ -75,6 +75,8 @@ CREATE TABLE `empleados` (
   FOREIGN KEY (`id_usuario`) REFERENCES `usuarios`(`id`) ON DELETE CASCADE 			-- FK con tabla usuarios
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci AUTO_INCREMENT = 2;
 
+INSERT INTO `empleados` (`id`,`id_usuario`,`cargo`) VALUES
+(1, 3, 'Administrador de reservaciones');
 -- ----------------------------------------------------------------------------------------
 
 --
@@ -211,3 +213,21 @@ FROM alojamientos al
 JOIN anfitriones a ON al.id_anfitrion = a.id
 JOIN usuarios u ON a.id_usuario = u.id
 WHERE al.id = 1;
+
+
+SELECT 
+            u.id AS id_usuario,
+            u.nombre,
+            u.apellido,
+            u.telefono,
+            u.correo,
+            u.rol,
+            u.estado,
+            u.fecha_registro AS usuario_registro,
+
+            e.id AS id_empleado,
+            e.cargo,
+            e.actualizado_en
+        FROM usuarios u
+        INNER JOIN empleados e ON e.id_usuario = u.id
+        WHERE u.id = 3
