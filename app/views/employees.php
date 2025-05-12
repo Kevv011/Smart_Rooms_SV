@@ -19,7 +19,7 @@
         <section class="d-flex flex-wrap justify-content-between">
             <!-- Boton para crear alojamiento -->
             <div>
-                <a href='<?= "/" . $_SESSION['rootFolder'] . "/Alojamiento/create" ?>' class="btn btn-warning">+ Añadir empleado</a>
+                <a href='' class="btn btn-warning">+ Añadir empleado</a>
             </div>
 
             <!-- Ver alojamientos existentes y eliminados -->
@@ -61,13 +61,13 @@
 
                     <?php if (!$alojamiento_disponible): ?>
                         <p class="mt-3 text-center text-muted alert alert-warning">
-                            <strong>No hay alojamientos disponibles por el momento.</strong>
+                            <strong>No hay empleados disponibles por el momento.</strong>
                         </p>
                     <?php endif; ?>
 
                 <?php else: ?>
                     <p class="mt-3 text-center text-muted alert alert-warning">
-                        <strong>No se encontraron alojamientos disponibles.</strong>
+                        <strong>No se encontraron empleados disponibles.</strong>
                     </p>
                 <?php endif; ?>
             </div>
@@ -76,46 +76,9 @@
     </main>
     <?php require "app/views/partials/footer.php"; ?> <!-- FOOTER -->
 
-    <!-- Manejo de contenedores de alojamientos DISPONIBLES y ELIMINADOS -->
-    <script>
-        function showContent(id_alojamiento_container) {
-            
-            //Permite alternar el mostrar alojamientos disponibles y eliminados
-            document.querySelectorAll('.show-content').forEach(div => div.style.display = 'none');
-            document.getElementById(id_alojamiento_container).style.display = 'block';
-        }
-    </script>
+   
 
-    <!-- Manejo de alertas -->
-    <?php if (isset($_GET['alert'])): ?>
-        <script>
-            let alertType = "<?php echo $_GET['alert']; ?>";
-            let alertMessage = "<?php echo urldecode($_GET['message']); ?>";
-
-            // Mostrar la alerta con SweetAlert
-            if (alertType === "success") {
-                Swal.fire({
-                    title: '¡Éxito!',
-                    text: alertMessage,
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    // Redirigir al panel de alojamientos
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos/";
-                });
-            } else if (alertType === "error") {
-                Swal.fire({
-                    title: '¡Error!',
-                    text: alertMessage,
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    // Redirigir al panel de alojamientos
-                    window.location.href = "/<?= $_SESSION['rootFolder'] ?>/Alojamiento/alojamientos/";
-                });
-            }
-        </script>
-    <?php endif; ?>
+   
 
     <!--BOOTSTRAP JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
